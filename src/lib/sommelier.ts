@@ -1,0 +1,66 @@
+/** "O que abro hoje?" (Fase 2): escolhe três vinhos da garrafeira para um prato, sem internet. */
+import type { TipoVinho, Vinho } from '../types';
+import { guiaEfetivo } from './guia';
+import { estadoJanela, noPico } from './janela';
+
+export interface Categoria { id: string; nome: string; palavras: string[]; tipos: Partial<Record<TipoVinho, number>> }
+
+export const CATEGORIAS: Categoria[] = [
+  { id: 'vermelha', nome: 'Carne vermelha', palavras: ['carne', 'novilho', 'vaca', 'bife', 'posta', 'costeleta', 'entrecosto', 'picanha', 'grelhad', 'brasa'], tipos: { tinto: 5 } },
+  { id: 'cabrito', nome: 'Cabrito ou borrego', palavras: ['cabrito', 'borrego', 'cordeiro', 'chanfana'], tipos: { tinto: 5 } },
+  { id: 'porco', nome: 'Porco', palavras: ['porco', 'secretos', 'plumas', 'lombo', 'leitao', 'rojoes', 'alentejana'], tipos: { tinto: 4, espumante: 3, branco: 2 } },
+  { id: 'aves', nome: 'Aves', palavras: ['frango', 'pato', 'peru', 'aves', 'galinha'], tipos: { tinto: 3, branco: 3, rose: 2 } },
+  { id: 'caca', nome: 'Caça', palavras: ['caca', 'javali', 'veado', 'perdiz', 'lebre', 'faisao'], tipos: { tinto: 5 } },
+  { id: 'bacalhau', nome: 'Bacalhau', palavras: ['bacalhau'], tipos: { branco: 4, tinto: 3 } },
+  { id: 'peixe', nome: 'Peixe', palavras: ['peixe', 'robalo', 'dourada', 'pescada', 'salmao', 'atum', 'polvo', 'sardinha'], tipos: { branco: 5, rose: 3, espumante: 3 } },
+  { id: 'marisco', nome: 'Marisco', palavras: ['marisco', 'camarao', 'ameijoa', 'ostra', 'lagosta', 'sapateira', 'gamba'], tipos: { branco: 5, espumante: 4, rose: 2 } },
+  { id: 'massa', nome: 'Massa ou pizza', palavras: ['massa', 'pizza', 'lasanha', 'risotto', 'arroz'], tipos: { tinto: 3, branco: 3, rose: 3 } },
+  { id: 'picante', nome: 'Picante ou asiático', palavras: ['picante', 'caril', 'sushi', 'asiatic', 'tailandes', 'indiano', 'chines'], tipos: { branco: 4, rose: 4, espumante: 3 } },
+  { id: 'aperitivo', nome: 'Aperitivo', palavras: ['aperitivo', 'petisco', 'entrada', 'fritos', 'charcutaria', 'presunto'], tipos: { espumante: 5, branco: 3, rose: 3 } },
+  { id: 'queijo', nome: 'Queijos', palavras: ['queijo', 'serra', 'azul', 'stilton', 'curado'], tipos: { porto: 5, tinto: 3, madeira: 3 } },
+  { id: 'sobremesa', nome: 'Sobremesa', palavras: ['sobremesa', 'doce', 'bolo', 'tarte', 'pudim', 'leite-creme', 'nata', 'amendoa'], tipos: { porto: 5, moscatel: 5, madeira: 4, sobremesa: 5, espumante: 1 } },
+  { id: 'chocolate', nome: 'Chocolate', palavras: ['chocolate', 'cacau'], tipos: { porto: 5, madeira: 3 } },
+];
+
+const s = (x?: string) => (x ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+export interface Sugestao { vinho: Vinho; pontos: number; razoes: string[] }
+
+export function sugerir(vinhos: Vinho[], categoria?: Categoria, texto = ''): Sugestao[] {
+  const pedido = s(texto);
+  const doTexto = pedido.split(/[^a-z0-9-]+/).filter((p) => p.length > 3);
+  const palavras = [...(categoria?.palavras ?? []), ...doTexto];
+  const cat = categoria ?? CATEGORIAS.find((c) => c.palavras.some((p) => pedido.includes(p)));
+
+  return vinhos
+    .filter((v) => v.quantidade > 0)
+    .map((v) => {
+      const { guia } = guiaEfetivo(v);
+      const razoes: string[] = [];
+      let pontos = cat?.tipos[v.tipo] ?? (cat ? -2 : 0);
+
+      // Pratos do guia: conta quantas palavras do pedido aparecem no mesmo prato (o prato inteiro vale mais).
+      let harm: { prato: string } | undefined;
+      let melhor = 0;
+      guia.harmonizacoes.forEach((h) => {
+        const ws = s(h.prato).split(/[^a-z0-9-]+/);
+        const bate = (p: string) => ws.some((w) => w.startsWith(p));
+        const n = doTexto.filter(bate).length * 2.5 + (doTexto.length > 1 && doTexto.every(bate) ? 2 : 0)
+          + (categoria?.palavras.some(bate) ? 3 : 0);
+        if (n > melhor) { melhor = n; harm = h; }
+      });
+      if (harm) { pontos += melhor; razoes.push(`Combina com ${harm.prato.charAt(0).toLowerCase()}${harm.prato.slice(1)}`); }
+      else if (cat && (cat.tipos[v.tipo] ?? 0) >= 4) razoes.push(`Um ${v.tipo === 'rose' ? 'rosé' : v.tipo} vai bem com ${cat.nome.toLowerCase()}`);
+      if (guia.evitar?.some((e) => palavras.some((p) => s(e).includes(p)))) pontos -= 5;
+
+      const janela = estadoJanela(v);
+      if (janela === 'no-ponto') { pontos += 2; if (noPico(v)) { pontos += 1; razoes.push('Está no melhor momento'); } else razoes.push('Pronto a beber'); }
+      if (janela === 'a-passar') { pontos += 2; razoes.push('Convém beber em breve'); }
+      if (janela === 'jovem') { pontos -= 3; razoes.push('Ainda jovem'); }
+      if (v.quantidade > 2) pontos += 0.5; // há garrafas de sobra
+      return { vinho: v, pontos, razoes };
+    })
+    .filter((x) => x.pontos > 0)
+    .sort((a, b) => b.pontos - a.pontos || (a.vinho.valorEstimado ?? 0) - (b.vinho.valorEstimado ?? 0))
+    .slice(0, 3);
+}
