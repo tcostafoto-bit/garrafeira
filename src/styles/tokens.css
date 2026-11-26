@@ -1,0 +1,47 @@
+:root {
+  /* Paleta · "garrafeira à luz de vela" */
+  --fundo: #14100f;
+  --superficie: #1e1816;
+  --superficie-2: #262019;
+  --linha: #2e2522;
+  --texto: #f3ebdd;
+  --texto-2: #b5a898;
+  --texto-3: #7d7166;
+  --bordeaux: #7b1e2b;
+  --bordeaux-claro: #9a2c3b;
+  --dourado: #c9a15b;
+
+  /* Cores por tipo */
+  --tinto: #7b1e2b;
+  --branco: #d9c27a;
+  --rose: #d98c8c;
+  --espumante: #e6d9a8;
+  --porto: #4a1420;
+  --madeira: #9a5b2e;
+  --moscatel: #c98a3a;
+  --sobremesa: #b07a3c;
+  --outro: #6b5d52;
+
+  /* Semáforo da janela */
+  --no-ponto: #6e9b6a;
+  --jovem: #c9a15b;
+  --a-passar: #b5523b;
+
+  /* Tipografia */
+  --serif: 'Fraunces', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Espaço e forma */
+  --r: 16px;
+  --r-sm: 10px;
+  --r-pill: 999px;
+  --e1: 4px; --e2: 8px; --e3: 12px; --e4: 16px; --e5: 24px; --e6: 32px; --e7: 48px;
+  --sombra: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+
+  /* Safe areas do iPhone */
+  --topo: env(safe-area-inset-top, 0px);
+  --base: env(safe-area-inset-bottom, 0px);
+  --nav-h: 64px;
+
+  color-scheme: dark;
+}
