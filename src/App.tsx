@@ -6,14 +6,16 @@ import { useAviso } from './components/Aviso';
 import { Entrar } from './screens/Entrar';
 import { Garrafeira } from './screens/Garrafeira';
 import { Definicoes } from './screens/Definicoes';
-import { EmBreve } from './screens/EmBreve';
 import { Adicionar } from './screens/Adicionar';
 import { Ficha } from './screens/Ficha';
 import { Formulario, type Sugestoes } from './screens/Formulario';
+import { ImportarClaude } from './screens/ImportarClaude';
+import { AbrirHoje } from './screens/AbrirHoje';
+import { Diario } from './screens/Diario';
 import { criarExemplos } from './lib/exemplos';
 import { caminhoMini } from './lib/vinhos';
 
-type Vista = { tipo: 'lista' } | { tipo: 'ficha'; id: string } | { tipo: 'form'; id?: string; voltarFicha?: boolean };
+type Vista = { tipo: 'lista' } | { tipo: 'ficha'; id: string } | { tipo: 'form'; id?: string; voltarFicha?: boolean } | { tipo: 'claude'; id?: undefined };
 
 export default function App() {
   const sessao = useSessao();
@@ -67,22 +69,23 @@ export default function App() {
         <Garrafeira inv={inv} adicionar={() => setAdicionar(true)} carregarExemplos={carregarExemplos}
           abrir={(id) => setVista({ tipo: 'ficha', id })} />
       )}
-      {separador === 'abrir' && (
-        <EmBreve sobretitulo="Sommelier" titulo="O que abro hoje?" icone="copo"
-          texto="Escolhes o prato e a app sugere três vinhos que tens em casa." />
-      )}
-      {separador === 'diario' && (
-        <EmBreve sobretitulo="Memória" titulo="Diário" icone="diario"
-          texto="As garrafas que vais abrindo, com nota, prato e ocasião." />
-      )}
-      {separador === 'definicoes' && <Definicoes email={email} inv={inv} avisar={avisar} carregarExemplos={carregarExemplos} />}
+      {separador === 'abrir' && <AbrirHoje inv={inv} abrir={(id) => setVista({ tipo: 'ficha', id })} />}
+      {separador === 'diario' && <Diario inv={inv} abrir={(id) => setVista({ tipo: 'ficha', id })} />}
+      {separador === 'definicoes' && <Definicoes email={email} inv={inv} avisar={avisar} carregarExemplos={carregarExemplos}
+        importarClaude={() => setVista({ tipo: 'claude' })} />}
 
       <BottomNav atual={separador} mudar={setSeparador} adicionar={() => setAdicionar(true)} />
       <Adicionar aberta={adicionar} fechar={() => setAdicionar(false)}
-        aMao={() => { setAdicionar(false); setVista({ tipo: 'form' }); }} />
+        aMao={() => { setAdicionar(false); setVista({ tipo: 'form' }); }}
+        claude={() => { setAdicionar(false); setVista({ tipo: 'claude' }); }} />
 
       {vista.tipo === 'ficha' && aberto && (
         <Ficha v={aberto} url={aberto.fotoPath ? inv.urls[aberto.fotoPath] ?? inv.urls[caminhoMini(aberto.fotoPath)] : undefined}
+          consumos={inv.consumos.filter((c) => c.vinhoId === aberto.id)}
+          abrirGarrafa={async (c) => {
+            try { await inv.abrirGarrafa(c); avisar('Saúde! Ficou no Diário.'); }
+            catch { avisar('Não consegui registar. Tenta outra vez.', true); }
+          }}
           fechar={() => setVista({ tipo: 'lista' })}
           editar={() => setVista({ tipo: 'form', id: aberto.id, voltarFicha: true })}
           mudarQuantidade={(q) => tentar(() => inv.mudarQuantidade(aberto.id, q), 'Não consegui atualizar as garrafas.')}
@@ -108,6 +111,10 @@ export default function App() {
             setVista({ tipo: 'ficha', id: salvo.id });
             avisar(aberto ? 'Alterações guardadas' : 'Vinho guardado');
           }} />
+      )}
+
+      {vista.tipo === 'claude' && (
+        <ImportarClaude inv={inv} avisar={avisar} fechar={() => { setVista({ tipo: 'lista' }); setSeparador('garrafeira'); }} />
       )}
 
       {aviso}

@@ -113,7 +113,7 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
             <GarrafaSilhueta tipo="porto" altura={96} />
           </div>
           <h2>A garrafeira está vazia</h2>
-          <p>Adiciona a primeira garrafa à mão, com uma foto do rótulo. Ou experimenta com alguns vinhos de exemplo.</p>
+          <p>Tira uma foto ao rótulo, manda-a ao Claude e cola aqui a ficha que ele te devolver. Também podes adicionar à mão.</p>
           <button className="botao" onClick={adicionar}>
             <Icone nome="mais" tamanho={20} /> Adicionar vinho
           </button>

@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { Vinho } from '../types';
+import type { Consumo, Vinho } from '../types';
 
 /** Dados que o formulário envia (o resto é gerido pela base de dados). */
 export type DadosVinho = Omit<Vinho, 'criadoEm' | 'atualizadoEm'>;
@@ -95,7 +95,19 @@ export interface Repositorio {
   enviarFoto(id: string, grande: Blob, mini: Blob): Promise<string>;
   apagarFoto(fotoPath: string): Promise<void>;
   urls(caminhos: string[]): Promise<Record<string, string>>;
+  listarConsumos(): Promise<Consumo[]>;
+  criarConsumo(c: Consumo): Promise<void>;
+  apagarConsumo(id: string): Promise<void>;
 }
+
+const consumoDeLinha = (r: Linha): Consumo => ({
+  id: r.id as string, vinhoId: r.vinho_id as string, data: r.data as string,
+  ocasiao: n(r.ocasiao), prato: n(r.prato), nota: num(r.nota), comentario: n(r.comentario),
+});
+const consumoParaLinha = (c: Consumo): Linha => ({
+  id: c.id, vinho_id: c.vinhoId, data: c.data,
+  ocasiao: c.ocasiao ?? null, prato: c.prato ?? null, nota: c.nota ?? null, comentario: c.comentario ?? null,
+});
 
 const repoNuvem = (sb: NonNullable<typeof supabase>): Repositorio => ({
   async listar() {
@@ -146,18 +158,32 @@ const repoNuvem = (sb: NonNullable<typeof supabase>): Repositorio => ({
     data?.forEach((d) => { if (d.signedUrl && d.path) r[d.path] = d.signedUrl; });
     return r;
   },
+  async listarConsumos() {
+    const { data, error } = await sb.from('consumos').select('*').order('data', { ascending: false }).order('criado_em', { ascending: false });
+    if (error) throw error;
+    return (data ?? []).map(consumoDeLinha);
+  },
+  async criarConsumo(c) {
+    const { error } = await sb.from('consumos').insert(consumoParaLinha(c));
+    if (error) throw error;
+  },
+  async apagarConsumo(id) {
+    const { error } = await sb.from('consumos').delete().eq('id', id);
+    if (error) throw error;
+  },
 });
 
 const CHAVE_LOCAL = 'garrafeira-local-v1';
 
-function lerLocal(): { vinhos: Vinho[]; fotos: Record<string, string> } {
+type DadosLocais = { vinhos: Vinho[]; fotos: Record<string, string>; consumos?: Consumo[] };
+function lerLocal(): DadosLocais {
   try {
     const t = localStorage.getItem(CHAVE_LOCAL);
     if (t) return JSON.parse(t);
   } catch { /* sem armazenamento */ }
   return { vinhos: [], fotos: {} };
 }
-function escreverLocal(d: { vinhos: Vinho[]; fotos: Record<string, string> }) {
+function escreverLocal(d: DadosLocais) {
   try { localStorage.setItem(CHAVE_LOCAL, JSON.stringify(d)); } catch { /* cheio ou bloqueado */ }
 }
 const paraDataUrl = (b: Blob) => new Promise<string>((ok, falha) => {
@@ -189,6 +215,7 @@ const repoLocal: Repositorio = {
   async apagar(id) {
     const d = lerLocal();
     d.vinhos = d.vinhos.filter((x) => x.id !== id);
+    d.consumos = (d.consumos ?? []).filter((c) => c.vinhoId !== id);
     escreverLocal(d);
   },
   async enviarFoto(id, grande, mini) {
@@ -208,6 +235,19 @@ const repoLocal: Repositorio = {
   async urls(caminhos) {
     const f = lerLocal().fotos;
     return Object.fromEntries(caminhos.filter((c) => f[c]).map((c) => [c, f[c]]));
+  },
+  async listarConsumos() {
+    return [...(lerLocal().consumos ?? [])].sort((a, b) => b.data.localeCompare(a.data));
+  },
+  async criarConsumo(c) {
+    const d = lerLocal();
+    d.consumos = [...(d.consumos ?? []), c];
+    escreverLocal(d);
+  },
+  async apagarConsumo(id) {
+    const d = lerLocal();
+    d.consumos = (d.consumos ?? []).filter((c) => c.id !== id);
+    escreverLocal(d);
   },
 };
 

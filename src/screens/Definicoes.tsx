@@ -3,17 +3,28 @@ import { supabase } from '../lib/supabase';
 import { Icone } from '../components/Icone';
 import { BottomSheet } from '../components/BottomSheet';
 import { lerBackup, partilharBackup } from '../lib/backup';
+import { textoInventario } from '../lib/ponte';
 import { TAG_EXEMPLO } from '../lib/exemplos';
 import type { DadosVinho } from '../lib/vinhos';
 import type { Inventario } from '../hooks/useVinhos';
 
-export function Definicoes({ email, inv, avisar, carregarExemplos }:
-  { email?: string; inv: Inventario; avisar: (t: string, erro?: boolean) => void; carregarExemplos: () => Promise<void> }) {
+export function Definicoes({ email, inv, avisar, carregarExemplos, importarClaude }:
+  { email?: string; inv: Inventario; avisar: (t: string, erro?: boolean) => void; carregarExemplos: () => Promise<void>; importarClaude: () => void }) {
   const ficheiro = useRef<HTMLInputElement>(null);
   const [aImportar, setAImportar] = useState<DadosVinho[] | null>(null);
   const [ocupado, setOcupado] = useState(false);
   const exemplos = inv.vinhos.filter((v) => v.tags.includes(TAG_EXEMPLO));
   const comFoto = inv.vinhos.filter((v) => v.fotoPath).length;
+
+  async function copiarInventario() {
+    const t = textoInventario(inv.vinhos);
+    try {
+      await navigator.clipboard.writeText(t);
+      avisar('Inventário copiado. Cola-o numa conversa com o Claude.');
+    } catch {
+      try { await navigator.share({ text: t }); } catch { avisar('Não consegui copiar.', true); }
+    }
+  }
 
   async function escolher(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -77,6 +88,19 @@ export function Definicoes({ email, inv, avisar, carregarExemplos }:
       </div>
 
       <div className="grupo">
+        <h3 className="grupo-titulo">Claude</h3>
+        <div className="cartao lista">
+          <button className="linha-def" style={{ width: '100%' }} disabled={!inv.vinhos.length} onClick={copiarInventario}>
+            <span>Copiar inventário para o Claude</span><Icone nome="copiar" tamanho={18} />
+          </button>
+          <button className="linha-def" style={{ width: '100%' }} onClick={importarClaude}>
+            <span>Importar do Claude</span><Icone nome="claude" tamanho={18} />
+          </button>
+        </div>
+        <p className="nota-grupo">Copia a lista de vinhos com os ids. Cola-a numa conversa com o Claude para ele te aconselhar ou devolver correções num bloco GARRAFEIRA v1.</p>
+      </div>
+
+      <div className="grupo">
         <h3 className="grupo-titulo">Backup</h3>
         <div className="cartao lista">
           <button className="linha-def" style={{ width: '100%' }} disabled={!inv.vinhos.length || ocupado}
@@ -117,7 +141,7 @@ export function Definicoes({ email, inv, avisar, carregarExemplos }:
         <p className="nota-grupo">Seis vinhos portugueses para experimentar. Saem todos de uma vez com o botão acima.</p>
       </div>
 
-      <p className="ajuda" style={{ marginTop: 32 }}>Garrafeira · versão 0.2</p>
+      <p className="ajuda" style={{ marginTop: 32 }}>Garrafeira · versão 0.5</p>
 
       <BottomSheet aberta={!!aImportar} fechar={() => setAImportar(null)} titulo="Importar backup?">
         <p style={{ color: 'var(--texto-2)', marginTop: 0 }}>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Vinho } from '../types';
+import type { Consumo, Vinho } from '../types';
 import { caminhoMini, repo, type DadosVinho } from '../lib/vinhos';
 
 export type FotoNova = { grande: Blob; mini: Blob } | null | undefined; // undefined = sem alteração, null = remover
@@ -7,12 +7,15 @@ export type FotoNova = { grande: Blob; mini: Blob } | null | undefined; // undef
 export function useVinhos(ativo: boolean) {
   const [vinhos, setVinhos] = useState<Vinho[]>([]);
   const [estado, setEstado] = useState<'a-carregar' | 'pronto' | 'erro'>('a-carregar');
+  const [consumos, setConsumos] = useState<Consumo[]>([]);
   const [urls, setUrls] = useState<Record<string, string>>({});
   const pedidas = useRef(new Set<string>());
 
   const carregar = useCallback(async () => {
     try {
-      setVinhos(await repo.listar());
+      const [vs, cs] = await Promise.all([repo.listar(), repo.listarConsumos().catch(() => [] as Consumo[])]);
+      setVinhos(vs);
+      setConsumos(cs);
       setEstado('pronto');
     } catch {
       setEstado('erro');
@@ -82,6 +85,7 @@ export function useVinhos(ativo: boolean) {
     await repo.apagar(id);
     if (v?.fotoPath) repo.apagarFoto(v.fotoPath).catch(() => {});
     setVinhos((vs) => vs.filter((x) => x.id !== id));
+    setConsumos((cs) => cs.filter((c) => c.vinhoId !== id));
   }, [vinhos]);
 
   const importar = useCallback(async (lista: DadosVinho[]) => {
@@ -98,7 +102,22 @@ export function useVinhos(ativo: boolean) {
     setVinhos((vs) => vs.filter((x) => !ids.includes(x.id)));
   }, [vinhos]);
 
-  return { vinhos, estado, urls, carregar, guardar, mudarQuantidade, alternarFavorito, apagar, importar, apagarVarios };
+  /** Abrir uma garrafa: regista no diário e tira uma garrafa à quantidade. */
+  const abrirGarrafa = useCallback(async (c: Omit<Consumo, 'id'>) => {
+    const v = vinhos.find((x) => x.id === c.vinhoId);
+    if (!v) return;
+    const novo: Consumo = { ...c, id: crypto.randomUUID() };
+    await repo.criarConsumo(novo);
+    setConsumos((cs) => [novo, ...cs].sort((a, b) => b.data.localeCompare(a.data)));
+    if (v.quantidade > 0) await mudarQuantidade(v.id, v.quantidade - 1);
+  }, [vinhos, mudarQuantidade]);
+
+  const apagarConsumo = useCallback(async (id: string) => {
+    await repo.apagarConsumo(id);
+    setConsumos((cs) => cs.filter((c) => c.id !== id));
+  }, []);
+
+  return { vinhos, consumos, abrirGarrafa, apagarConsumo, estado, urls, carregar, guardar, mudarQuantidade, alternarFavorito, apagar, importar, apagarVarios };
 }
 
 export type Inventario = ReturnType<typeof useVinhos>;
