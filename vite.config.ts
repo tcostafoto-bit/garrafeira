@@ -7,6 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: false, // registo feito em main.tsx, para procurar atualizações sempre que a app volta ao ecrã
       includeAssets: ['icons/apple-touch-icon.png', 'icons/favicon.svg'],
       manifest: {
         name: 'Garrafeira',
