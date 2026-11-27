@@ -113,6 +113,13 @@ const SINONIMOS: Record<string, TipoVinho> = {
   espumante: 'espumante', champanhe: 'espumante', champagne: 'espumante', prosecco: 'espumante', cava: 'espumante', sparkling: 'espumante',
   porto: 'porto', 'vinho do porto': 'porto', port: 'porto', madeira: 'madeira', moscatel: 'moscatel',
   sobremesa: 'sobremesa', 'colheita tardia': 'sobremesa', doce: 'sobremesa', outro: 'outro',
+  whisky: 'whisky', whiskey: 'whisky', uisque: 'whisky', scotch: 'whisky', bourbon: 'whisky', 'single malt': 'whisky',
+  destilado: 'destilado', espirituoso: 'destilado', aguardente: 'destilado', conhaque: 'destilado', cognac: 'destilado', brandy: 'destilado',
+  armagnac: 'destilado', gin: 'destilado', rum: 'destilado', rhum: 'destilado', vodka: 'destilado', vodca: 'destilado', tequila: 'destilado',
+  mezcal: 'destilado', grappa: 'destilado', bagaceira: 'destilado', calvados: 'destilado',
+  licor: 'licor', liqueur: 'licor', amaro: 'licor',
+  cerveja: 'cerveja', beer: 'cerveja', ale: 'cerveja', lager: 'cerveja', stout: 'cerveja', ipa: 'cerveja',
+  sidra: 'sidra', cider: 'sidra', sake: 'sake', saque: 'sake',
 };
 function tipo(v: unknown, avisos: string[]): TipoVinho | undefined {
   if (ehVazio(v)) return undefined;

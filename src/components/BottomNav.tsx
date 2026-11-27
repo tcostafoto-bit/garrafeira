@@ -22,7 +22,7 @@ export function BottomNav({ atual, mudar, adicionar }:
     <nav className="nav" aria-label="Navegação principal">
       <div className="nav-interior">
         {itens.slice(0, 2).map(botao)}
-        <button className="nav-mais" onClick={adicionar} aria-label="Adicionar vinho">
+        <button className="nav-mais" onClick={adicionar} aria-label="Adicionar à garrafeira">
           <Icone nome="mais" tamanho={26} />
         </button>
         {itens.slice(2).map(botao)}

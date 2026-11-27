@@ -178,7 +178,7 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
           <h2>A garrafeira está vazia</h2>
           <p>Tira uma foto ao rótulo, manda-a ao Claude e cola aqui a ficha que ele te devolver. Também podes adicionar à mão.</p>
           <button className="botao" onClick={adicionar}>
-            <Icone nome="mais" tamanho={20} /> Adicionar vinho
+            <Icone nome="mais" tamanho={20} /> Adicionar à garrafeira
           </button>
           <div><button className="ligacao" style={{ marginTop: 20 }} onClick={carregarExemplos}>Carregar vinhos de exemplo</button></div>
         </section>
@@ -209,7 +209,7 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
           </div>
 
           <div className="lista-topo">
-            <span>{lista.length} {lista.length === 1 ? 'vinho' : 'vinhos'}
+            <span>{lista.length} {lista.length === 1 ? 'item' : 'itens'}
               {ordem === 'minha' && (
                 <button className="ligacao" style={{ marginLeft: 12 }} onClick={() => setArrumar(!arrumar)}>
                   {arrumar ? 'Concluído' : 'Arrumar'}

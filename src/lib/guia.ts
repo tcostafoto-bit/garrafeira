@@ -127,6 +127,48 @@ export function guiaPorRegras(v: Vinho): GuiaVinho {
         harmonizacoes: [{ prato: 'Foie gras' }, { prato: 'Queijo azul' }, { prato: 'Tarte de fruta' }],
         perfil: { corpo: 3, acidez: 4, docura: 5 },
       };
+    case 'whisky':
+      return {
+        temperaturaMin: 16, temperaturaMax: 20, decantar: 'nao', copo: 'Copo Glencairn ou copita de prova',
+        decantarNota: 'Não se decanta nem evolui na garrafa. Sem gelo; um pingo de água abre os aromas.',
+        harmonizacoes: [{ prato: 'Chocolate negro' }, { prato: 'Frutos secos' }, { prato: 'Queijo azul curado' }],
+        evitar: ['Gelo em excesso', 'Pratos picantes'],
+        perfil: { corpo: 4, acidez: 2, docura: 2 },
+      };
+    case 'destilado':
+      return {
+        temperaturaMin: 12, temperaturaMax: 18, decantar: 'nao', copo: 'Copo de provar ou copo baixo',
+        decantarNota: 'Aguardentes velhas, conhaque e rum escuro bebem-se sem gelo; gin e vodka podem ir bem frios.',
+        harmonizacoes: [{ prato: 'Chocolate negro' }, { prato: 'Frutos secos' }, { prato: 'Queijo curado' }],
+        perfil: { corpo: 4, acidez: 1, docura: 2 },
+      };
+    case 'licor':
+      return {
+        temperaturaMin: 8, temperaturaMax: 14, decantar: 'nao', copo: 'Cálice pequeno',
+        decantarNota: 'Pode ir ao frio ou com gelo. Depois de aberto dura meses.',
+        harmonizacoes: [{ prato: 'Sobremesas' }, { prato: 'Gelado de baunilha' }, { prato: 'Café' }],
+        perfil: { corpo: 3, acidez: 1, docura: 5 },
+      };
+    case 'cerveja':
+      return {
+        temperaturaMin: 4, temperaturaMax: 8, decantar: 'nao', copo: 'Copo de cerveja',
+        decantarNota: 'Servir fresca; as cervejas fortes e de abadia pedem 8 a 12 °C.',
+        harmonizacoes: [{ prato: 'Petiscos' }, { prato: 'Hambúrguer' }, { prato: 'Marisco' }, { prato: 'Comida picante' }],
+        perfil: { corpo: 2, acidez: 2, docura: 1 },
+      };
+    case 'sidra':
+      return {
+        temperaturaMin: 4, temperaturaMax: 8, decantar: 'nao', copo: 'Copo de sidra ou flute',
+        harmonizacoes: [{ prato: 'Porco' }, { prato: 'Queijo' }, { prato: 'Tarte de maçã' }],
+        perfil: { corpo: 2, acidez: 4, docura: 2 },
+      };
+    case 'sake':
+      return {
+        temperaturaMin: 8, temperaturaMax: 12, decantar: 'nao', copo: 'Copo pequeno de saquê',
+        decantarNota: 'Os saquês finos (ginjo, daiginjo) servem-se frios; os de arroz mais encorpado podem ir mornos.',
+        harmonizacoes: [{ prato: 'Sushi e sashimi' }, { prato: 'Tempura' }, { prato: 'Peixe grelhado' }],
+        perfil: { corpo: 2, acidez: 2, docura: 2 },
+      };
     default:
       return {
         temperaturaMin: 12, temperaturaMax: 16, decantar: 'opcional', copo: 'Copo universal',

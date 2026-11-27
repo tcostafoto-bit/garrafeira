@@ -8,7 +8,7 @@ export function Adicionar({ aberta, fechar, aMao, claude }: { aberta: boolean; f
     { id: 'codigo', icone: 'codigo' as const, titulo: 'Código de barras', texto: 'Ler o código da garrafa com a câmara', fase: 'Em breve' },
   ];
   return (
-    <BottomSheet aberta={aberta} fechar={fechar} titulo="Adicionar vinho">
+    <BottomSheet aberta={aberta} fechar={fechar} titulo="Adicionar à garrafeira">
       {opcoes.map((o) => (
         <button key={o.id} className={`opcao${'principal' in o && o.principal ? ' principal' : ''}`} disabled={!o.ativa} aria-disabled={!o.ativa}
           onClick={'acao' in o ? o.acao : undefined}>

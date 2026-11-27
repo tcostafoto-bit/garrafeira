@@ -1,5 +1,7 @@
 import type { TipoVinho } from '../types';
 
+export type Forma = 'bordeaux' | 'borgonha' | 'flute' | 'uisque' | 'cerveja';
+
 /** Silhueta de garrafa usada quando um vinho não tem foto. */
 export interface Rotulo { nome: string; produtor?: string; ano?: number }
 
@@ -17,11 +19,15 @@ function linhas(texto: string, max: number, limite: number): string[] {
 }
 
 export function GarrafaSilhueta({ tipo = 'tinto', altura = 120, forma = 'bordeaux', rotulo }:
-  { tipo?: TipoVinho; altura?: number; forma?: 'bordeaux' | 'borgonha' | 'flute'; rotulo?: Rotulo }) {
+  { tipo?: TipoVinho; altura?: number; forma?: Forma; rotulo?: Rotulo }) {
   const cor = `var(--${tipo})`;
   const corpo =
     forma === 'borgonha'
       ? 'M17 4h6v20c0 6 9 12 9 24v62a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6V48c0-12 9-18 9-24Z'
+      : forma === 'uisque'
+        ? 'M16 4h8v12c0 4 12 8 12 22v72a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6V38c0-14 12-18 12-22Z'
+      : forma === 'cerveja'
+        ? 'M17 4h6v34c0 6 8 10 8 22v50a6 6 0 0 1-6 6H15a6 6 0 0 1-6-6V60c0-12 8-16 8-22Z'
       : forma === 'flute'
         ? 'M17.5 4h5v26c0 4 6 8 6 16v64a6 6 0 0 1-6 6h-5a6 6 0 0 1-6-6V46c0-8 6-12 6-16Z'
         : 'M17 4h6v26c0 3 9 5 9 12v68a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6V42c0-7 9-9 9-12Z';
@@ -50,7 +56,7 @@ export function GarrafaSilhueta({ tipo = 'tinto', altura = 120, forma = 'bordeau
 }
 
 /** Rótulo desenhado na garrafa: produtor pequeno, nome em destaque e ano. */
-function RotuloTexto({ r, forma, cor }: { r: Rotulo; forma: 'bordeaux' | 'borgonha' | 'flute'; cor: string }) {
+function RotuloTexto({ r, forma, cor }: { r: Rotulo; forma: Forma; cor: string }) {
   const largo = forma !== 'flute';
   const x = largo ? 9.5 : 12, w = largo ? 21 : 16;
   const max = largo ? 11 : 8;

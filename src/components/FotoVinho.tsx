@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { GarrafaSilhueta, type Rotulo } from './GarrafaSilhueta';
+import { GarrafaSilhueta, type Forma, type Rotulo } from './GarrafaSilhueta';
 import type { TipoVinho } from '../types';
 
-export const formaGarrafa = (t: TipoVinho) =>
-  t === 'espumante' ? 'flute' : t === 'branco' || t === 'rose' ? 'borgonha' : 'bordeaux';
+export const formaGarrafa = (t: TipoVinho): Forma =>
+  t === 'espumante' ? 'flute'
+    : t === 'branco' || t === 'rose' ? 'borgonha'
+      : t === 'whisky' || t === 'destilado' || t === 'licor' || t === 'sake' ? 'uisque'
+        : t === 'cerveja' || t === 'sidra' ? 'cerveja' : 'bordeaux';
 
 /** Foto da garrafa (do Tiago ou de loja) ou, se não houver ou falhar, a silhueta com o rótulo desenhado. */
 export function FotoVinho({ tipo, url, altura, className, rotulo, externa }:
