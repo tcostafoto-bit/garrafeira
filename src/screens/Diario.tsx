@@ -3,7 +3,6 @@ import { fotoProps } from '../lib/imagens';
 import { FotoVinho } from '../components/FotoVinho';
 import { Icone } from '../components/Icone';
 import { Estrelas } from '../components/AbrirGarrafa';
-import { caminhoMini } from '../lib/vinhos';
 import type { Inventario } from '../hooks/useVinhos';
 
 const mes = (d: string) => new Date(d + 'T12:00:00').toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });

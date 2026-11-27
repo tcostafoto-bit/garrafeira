@@ -5,7 +5,6 @@ import { Icone } from '../components/Icone';
 import { CATEGORIAS, sugerir, type Categoria } from '../lib/sommelier';
 import { guiaEfetivo } from '../lib/guia';
 import { formatarTemperatura } from '../lib/formatos';
-import { caminhoMini } from '../lib/vinhos';
 import type { Inventario } from '../hooks/useVinhos';
 
 export function AbrirHoje({ inv, abrir }: { inv: Inventario; abrir: (id: string) => void }) {
