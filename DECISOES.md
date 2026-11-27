@@ -42,3 +42,8 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - **Vale Meão 2018:** retirada a ligação da Gloria Wines; ficam Garrafeira Soares e Hedonism (esgotado, sem IVA). Estimativa 230 €.
 - **Ramos Pinto Cota Seiscentos / Duzentos:** os 145 € eram de um conjunto de 3; a estimativa de 60 € é minha, sem fonte de garrafa solta.
 - **Aplicar:** ficheiro `correcoes-precos-2026-11-27.md` (14 vinhos, `atualizar`). Valores a `null` limpam mínimos e máximos antigos.
+
+## Ordem, alertas e rótulos (27/11/2026)
+- **A minha ordem:** nova opção de ordenação com «Arrumar» (setas ↑↓ por vinho). A ordem e a ordenação escolhida ficam guardadas **neste telemóvel** (não vão para a base de dados), porque guardar na nuvem pedia uma migração SQL nova e arriscava partir a app se faltasse a coluna. Vinhos novos entram no fim.
+- **Alertas:** cartão «a pedir atenção» no topo da Garrafeira, filtro «A pedir atenção» e aviso em cada linha. «Passou da janela» quando o ano é depois do fim da janela; «breve» no último ano da janela e no anterior. Só vinhos com janela e com garrafas.
+- **Rótulos:** a garrafa sem foto traz o rótulo desenhado com produtor, nome e ano. Se houver foto, mostra-se a foto.

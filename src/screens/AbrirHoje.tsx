@@ -53,7 +53,7 @@ export function AbrirHoje({ inv, abrir }: { inv: Inventario; abrir: (id: string)
                   <li key={v.id}>
                     <button className="linha-vinho sugestao" onClick={() => abrir(v.id)}>
                       <span className="sugestao-n num">{i + 1}</span>
-                      <FotoVinho tipo={v.tipo} url={v.fotoPath ? inv.urls[caminhoMini(v.fotoPath)] : undefined} altura={58} className="mini" />
+                      <FotoVinho tipo={v.tipo} url={v.fotoPath ? inv.urls[caminhoMini(v.fotoPath)] : undefined} altura={70} className="mini" rotulo={v ? { nome: v.nome, ano: v.ano } : undefined} />
                       <span className="linha-vinho-texto">
                         <span className="linha-vinho-nome">{v.nome}</span>
                         <span className="linha-vinho-sub">{[v.produtor, v.ano ?? 'NV'].filter(Boolean).join(' · ')}</span>

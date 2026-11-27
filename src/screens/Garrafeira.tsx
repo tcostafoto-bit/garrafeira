@@ -3,15 +3,16 @@ import { GarrafaSilhueta } from '../components/GarrafaSilhueta';
 import { FotoVinho } from '../components/FotoVinho';
 import { Icone } from '../components/Icone';
 import { formatarEuro } from '../lib/formatos';
-import { estadoJanela } from '../lib/janela';
+import { alertaJanela, estadoJanela } from '../lib/janela';
 import { caminhoMini } from '../lib/vinhos';
 import { TIPOS, type TipoVinho, type Vinho } from '../types';
 import type { Inventario } from '../hooks/useVinhos';
 
-type Filtro = 'todos' | TipoVinho | 'pronto' | 'favoritos' | 'acabados';
-type Ordem = 'nome' | 'ano' | 'valor' | 'recentes';
+type Filtro = 'todos' | TipoVinho | 'pronto' | 'atencao' | 'favoritos' | 'acabados';
+type Ordem = 'minha' | 'nome' | 'ano' | 'valor' | 'recentes';
 
 const ORDENS: { id: Ordem; nome: string }[] = [
+  { id: 'minha', nome: 'A minha ordem' },
   { id: 'nome', nome: 'Nome' },
   { id: 'ano', nome: 'Ano' },
   { id: 'valor', nome: 'Valor' },
@@ -21,6 +22,15 @@ const ORDENS: { id: Ordem; nome: string }[] = [
 /** Valor de uma garrafa: o estimado, ou o preço de compra se ainda não houver estimativa. */
 export const valorGarrafa = (v: Vinho) => v.valorEstimado ?? v.precoCompra ?? 0;
 
+const CHAVE_ORDEM = 'garrafeira-minha-ordem-v1';
+const CHAVE_MODO = 'garrafeira-modo-ordem-v1';
+function lerLS<T>(chave: string, vazio: T): T {
+  try { const r = localStorage.getItem(chave); return r ? (JSON.parse(r) as T) : vazio; } catch { return vazio; }
+}
+function gravarLS(chave: string, valor: unknown) {
+  try { localStorage.setItem(chave, JSON.stringify(valor)); } catch { /* sem armazenamento: a ordem só dura esta sessão */ }
+}
+
 const semAcentos = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
@@ -28,17 +38,29 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
   const { vinhos, urls, estado } = inv;
   const [texto, setTexto] = useState('');
   const [filtro, setFiltro] = useState<Filtro>('todos');
-  const [ordem, setOrdem] = useState<Ordem>('nome');
+  const [ordem, setOrdemEstado] = useState<Ordem>(() => {
+    const o = lerLS<string>(CHAVE_MODO, 'nome');
+    return ORDENS.some((x) => x.id === o) ? (o as Ordem) : 'nome';
+  });
+  const [minhaOrdem, setMinhaOrdem] = useState<string[]>(() => lerLS<string[]>(CHAVE_ORDEM, []));
+  const [arrumar, setArrumar] = useState(false);
+  const setOrdem = (o: Ordem) => { setOrdemEstado(o); gravarLS(CHAVE_MODO, o); if (o !== 'minha') setArrumar(false); };
 
   const naGarrafeira = vinhos.filter((v) => v.quantidade > 0);
   const garrafas = naGarrafeira.reduce((s, v) => s + v.quantidade, 0);
   const valor = naGarrafeira.reduce((s, v) => s + v.quantidade * valorGarrafa(v), 0);
   const prontos = naGarrafeira.filter((v) => estadoJanela(v) === 'no-ponto').length;
 
+  const alertas = naGarrafeira
+    .map((v) => ({ v, a: alertaJanela(v) }))
+    .filter((x): x is { v: Vinho; a: NonNullable<ReturnType<typeof alertaJanela>> } => !!x.a)
+    .sort((x, y) => (x.a.tipo === y.a.tipo ? 0 : x.a.tipo === 'passou' ? -1 : 1));
+
   const filtros = useMemo(() => {
     const f: { id: Filtro; nome: string }[] = [{ id: 'todos', nome: 'Todos' }];
     TIPOS.forEach((t) => { if (naGarrafeira.some((v) => v.tipo === t.id)) f.push({ id: t.id, nome: t.nome }); });
     if (naGarrafeira.some((v) => estadoJanela(v))) f.push({ id: 'pronto', nome: 'Pronto a beber' });
+    if (naGarrafeira.some((v) => alertaJanela(v))) f.push({ id: 'atencao', nome: 'A pedir atenção' });
     if (vinhos.some((v) => v.favorito)) f.push({ id: 'favoritos', nome: 'Favoritos' });
     if (vinhos.some((v) => v.quantidade === 0)) f.push({ id: 'acabados', nome: 'Acabados' });
     return f;
@@ -52,6 +74,7 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
       if (filtroAtivo === 'acabados') return v.quantidade === 0;
       if (filtroAtivo === 'favoritos') return v.favorito;
       if (v.quantidade === 0 && !q) return false;
+      if (filtroAtivo === 'atencao') return !!alertaJanela(v);
       if (filtroAtivo === 'pronto') return estadoJanela(v) === 'no-ponto';
       if (filtroAtivo !== 'todos') return v.tipo === filtroAtivo;
       return true;
@@ -64,14 +87,31 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
         return palavras.every((p) => alvo.includes(p));
       });
     }
+    const pos = (id: string) => { const i = minhaOrdem.indexOf(id); return i < 0 ? 1e9 : i; };
     const cmp: Record<Ordem, (a: Vinho, b: Vinho) => number> = {
+      minha: (a, b) => pos(a.id) - pos(b.id) || a.nome.localeCompare(b.nome, 'pt'),
       nome: (a, b) => a.nome.localeCompare(b.nome, 'pt'),
       ano: (a, b) => (a.ano ?? 9999) - (b.ano ?? 9999) || a.nome.localeCompare(b.nome, 'pt'),
       valor: (a, b) => valorGarrafa(b) - valorGarrafa(a),
       recentes: (a, b) => (b.criadoEm ?? '').localeCompare(a.criadoEm ?? ''),
     };
     return [...r].sort(cmp[ordem]);
-  }, [vinhos, texto, filtroAtivo, ordem]);
+  }, [vinhos, texto, filtroAtivo, ordem, minhaOrdem]);
+
+  /** Troca o vinho com o vizinho visível (para cima ou para baixo) e guarda a ordem neste telemóvel. */
+  const mover = (id: string, passo: -1 | 1) => {
+    const i = lista.findIndex((v) => v.id === id);
+    const vizinho = lista[i + passo];
+    if (!vizinho) return;
+    const completa = [...vinhos].sort((a, b) => {
+      const pa = minhaOrdem.indexOf(a.id), pb = minhaOrdem.indexOf(b.id);
+      return (pa < 0 ? 1e9 : pa) - (pb < 0 ? 1e9 : pb) || a.nome.localeCompare(b.nome, 'pt');
+    }).map((v) => v.id);
+    const a = completa.indexOf(id), b = completa.indexOf(vizinho.id);
+    [completa[a], completa[b]] = [completa[b], completa[a]];
+    setMinhaOrdem(completa);
+    gravarLS(CHAVE_ORDEM, completa);
+  };
 
   const vazia = estado === 'pronto' && vinhos.length === 0;
 
@@ -95,6 +135,29 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
           {prontos} {prontos === 1 ? 'pronto' : 'prontos'} a beber
         </div>
       </section>
+
+      {alertas.length > 0 && !vazia && (
+        <section className="cartao alertas" aria-label="Vinhos a pedir atenção">
+          <div className="alertas-topo">
+            <strong>{alertas.length} {alertas.length === 1 ? 'vinho a pedir atenção' : 'vinhos a pedir atenção'}</strong>
+            <button className="ligacao" onClick={() => setFiltro('atencao')}>Ver todos</button>
+          </div>
+          <ul>
+            {alertas.slice(0, 3).map(({ v, a }) => (
+              <li key={v.id}>
+                <button onClick={() => abrir(v.id)}>
+                  <span className="ponto" style={{ background: a.tipo === 'passou' ? 'var(--a-passar)' : 'var(--dourado)' }} />
+                  <span className="alertas-texto">
+                    <span className="alertas-nome">{v.nome}{v.ano ? ` ${v.ano}` : ''}</span>
+                    <span className="alertas-sub">{a.texto}</span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          {alertas.length > 3 && <div className="nota-grupo" style={{ margin: '8px 0 0' }}>E mais {alertas.length - 3}.</div>}
+        </section>
+      )}
 
       {estado === 'erro' && (
         <div className="aviso" style={{ marginTop: 16 }}>
@@ -146,7 +209,13 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
           </div>
 
           <div className="lista-topo">
-            <span>{lista.length} {lista.length === 1 ? 'vinho' : 'vinhos'}</span>
+            <span>{lista.length} {lista.length === 1 ? 'vinho' : 'vinhos'}
+              {ordem === 'minha' && (
+                <button className="ligacao" style={{ marginLeft: 12 }} onClick={() => setArrumar(!arrumar)}>
+                  {arrumar ? 'Concluído' : 'Arrumar'}
+                </button>
+              )}
+            </span>
             <label className="ordenar">
               <Icone nome="ordenar" tamanho={16} />
               <span className="sr-only">Ordenar por</span>
@@ -164,7 +233,11 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
             </p>
           ) : (
             <ul className="lista">
-              {lista.map((v) => <LinhaVinho key={v.id} v={v} url={v.fotoPath ? urls[caminhoMini(v.fotoPath)] : undefined} abrir={abrir} />)}
+              {lista.map((v, i) => (
+                <LinhaVinho key={v.id} v={v} url={v.fotoPath ? urls[caminhoMini(v.fotoPath)] : undefined} abrir={abrir}
+                  mover={arrumar && ordem === 'minha' ? (p) => mover(v.id, p) : undefined}
+                  primeiro={i === 0} ultimo={i === lista.length - 1} />
+              ))}
             </ul>
           )}
         </>
@@ -173,20 +246,29 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
   );
 }
 
-function LinhaVinho({ v, url, abrir }: { v: Vinho; url?: string; abrir: (id: string) => void }) {
+function LinhaVinho({ v, url, abrir, mover, primeiro, ultimo }:
+  { v: Vinho; url?: string; abrir: (id: string) => void; mover?: (p: -1 | 1) => void; primeiro: boolean; ultimo: boolean }) {
   const janela = estadoJanela(v);
+  const alerta = v.quantidade > 0 ? alertaJanela(v) : undefined;
   const linha2 = [v.produtor, v.ano ?? 'NV'].filter(Boolean).join(' · ');
   const linha3 = [TIPOS.find((t) => t.id === v.tipo)?.nome, v.regiao].filter(Boolean).join(' · ');
   return (
-    <li>
+    <li className={mover ? 'com-mover' : undefined}>
+      {mover && (
+        <span className="mover">
+          <button aria-label={`Subir ${v.nome}`} disabled={primeiro} onClick={() => mover(-1)}>↑</button>
+          <button aria-label={`Descer ${v.nome}`} disabled={ultimo} onClick={() => mover(1)}>↓</button>
+        </span>
+      )}
       <button className={`linha-vinho${v.quantidade === 0 ? ' acabado' : ''}`} onClick={() => abrir(v.id)}>
-        <FotoVinho tipo={v.tipo} url={url} altura={58} className="mini" />
+        <FotoVinho tipo={v.tipo} url={url} altura={70} className="mini" rotulo={{ nome: v.nome, ano: v.ano }} />
         <span className="linha-vinho-texto">
           <span className="linha-vinho-nome">{v.nome}</span>
           <span className="linha-vinho-sub">{linha2}</span>
           <span className="linha-vinho-sub fraco">
             <span className="ponto" style={{ background: `var(--${v.tipo})` }} /> {linha3}
           </span>
+          {alerta && <span className="linha-vinho-alerta" style={{ color: alerta.tipo === 'passou' ? 'var(--a-passar)' : 'var(--dourado)' }}>{alerta.texto}</span>}
         </span>
         <span className="linha-vinho-lado">
           <span className="quantidade num">{v.quantidade === 0 ? 'acabou' : `×${v.quantidade}`}</span>
