@@ -52,7 +52,8 @@ const LISTA: [string, number | undefined, string][] = [
 
 const IMAGENS = new Map(LISTA.map(([nome, ano, url]) => [chaveVinho(nome, ano), url]));
 
-export const imagemExterna = (v: Pick<Vinho, 'nome' | 'ano'>) => IMAGENS.get(chaveVinho(v.nome, v.ano));
+/** O endereço guardado na própria ficha (fotoUrl) ganha à lista de reserva acima. */
+export const imagemExterna = (v: Pick<Vinho, 'nome' | 'ano'> & { fotoUrl?: string }) => v.fotoUrl || IMAGENS.get(chaveVinho(v.nome, v.ano));
 
 /** Foto a mostrar: a do Tiago (privada) ou, na falta dela, a da loja. */
 export function fotoProps(v: Vinho, urls: Record<string, string>, mini: boolean): { url?: string; externa?: boolean } {

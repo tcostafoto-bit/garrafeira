@@ -33,7 +33,7 @@ function recortar(v: Vinho, precos: boolean): Vinho {
   return {
     id: v.id, nome: v.nome, produtor: v.produtor, ano: v.ano, tipo: v.tipo, pais: v.pais, regiao: v.regiao,
     denominacao: v.denominacao, castas: v.castas, teorAlcool: v.teorAlcool, volumeMl: v.volumeMl,
-    guia: v.guia, guiaOrigem: v.guiaOrigem, criticas: v.criticas,
+    guia: v.guia, guiaOrigem: v.guiaOrigem, criticas: v.criticas, fotoUrl: v.fotoUrl,
     valorEstimado: precos ? v.valorEstimado : undefined, valorMin: precos ? v.valorMin : undefined, valorMax: precos ? v.valorMax : undefined,
     quantidade: 0, valorFontes: [], favorito: false, tags: [], criadoEm: '', atualizadoEm: '',
   };

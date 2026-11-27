@@ -8,6 +8,10 @@ import { textoInventario } from '../lib/ponte';
 import { TAG_EXEMPLO } from '../lib/exemplos';
 import type { DadosVinho } from '../lib/vinhos';
 import type { Inventario } from '../hooks/useVinhos';
+import { TIPOS } from '../types';
+import { imagemExterna } from '../lib/imagens';
+
+const TIPOS_VINHO = new Set(TIPOS.filter((t) => t.grupo === 'vinho').map((t) => t.id));
 
 export function Definicoes({ email, inv, avisar, carregarExemplos, importarClaude }:
   { email?: string; inv: Inventario; avisar: (t: string, erro?: boolean) => void; carregarExemplos: () => Promise<void>; importarClaude: () => void }) {
@@ -17,6 +21,14 @@ export function Definicoes({ email, inv, avisar, carregarExemplos, importarClaud
   const [partilhar, setPartilhar] = useState(false);
   const exemplos = inv.vinhos.filter((v) => v.tags.includes(TAG_EXEMPLO));
   const comFoto = inv.vinhos.filter((v) => v.fotoPath).length;
+  const nomeV = (v: { nome: string; ano?: number }) => (v.ano ? `${v.nome} ${v.ano}` : v.nome);
+  const revisao = [
+    { rotulo: 'Sem foto', lista: inv.vinhos.filter((v) => !v.fotoPath && !imagemExterna(v)).map(nomeV) },
+    { rotulo: 'Sem guia de prova', lista: inv.vinhos.filter((v) => !v.guia?.harmonizacoes?.length).map(nomeV) },
+    { rotulo: 'Sem ocasiões', lista: inv.vinhos.filter((v) => !v.guia?.ocasioes?.length).map(nomeV) },
+    { rotulo: 'Sem notas de críticos', lista: inv.vinhos.filter((v) => !v.criticas && TIPOS_VINHO.has(v.tipo)).map(nomeV) },
+    { rotulo: 'Sem valor', lista: inv.vinhos.filter((v) => !v.valorEstimado).map(nomeV) },
+  ];
 
   async function copiarInventario() {
     const t = textoInventario(inv.vinhos);
@@ -98,6 +110,28 @@ export function Definicoes({ email, inv, avisar, carregarExemplos, importarClaud
         </div>
         <p className="nota-grupo">Cria uma ligação que podes enviar a amigos. Podes desligá-la quando quiseres. Para partilhar uma só garrafa, abre o vinho e toca no botão de partilhar.</p>
       </div>
+
+      {inv.vinhos.length > 0 && (
+        <div className="grupo">
+          <h3 className="grupo-titulo">Revisão da garrafeira</h3>
+          <div className="cartao lista">
+            {revisao.map((r) => (
+              <div key={r.rotulo} className="linha-def">
+                <span>{r.rotulo}</span>
+                <span className="valor" style={{ color: r.lista.length ? '#e0b878' : undefined }}>
+                  {r.lista.length ? `${r.lista.length} em falta` : 'Tudo certo'}
+                </span>
+              </div>
+            ))}
+          </div>
+          {revisao.some((r) => r.lista.length) && (
+            <p className="nota-grupo">
+              {revisao.filter((r) => r.lista.length).map((r) => `${r.rotulo}: ${r.lista.slice(0, 6).join(', ')}${r.lista.length > 6 ? '…' : ''}`).join(' · ')}
+            </p>
+          )}
+          <p className="nota-grupo">Copia o inventário para o Claude e pede-lhe para completar o que falta.</p>
+        </div>
+      )}
 
       <div className="grupo">
         <h3 className="grupo-titulo">Claude</h3>

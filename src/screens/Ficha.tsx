@@ -168,6 +168,12 @@ export function Ficha({ v, foto, consumos = [], fechar, editar = nada, mudarQuan
             </>
           )}
           {guia.evitar && guia.evitar.length > 0 && <p className="nota-grupo">Evitar: {guia.evitar.join(', ')}.</p>}
+          {guia.ocasioes && guia.ocasioes.length > 0 && (
+            <>
+              <h4 className="sub-grupo">Quando abrir</h4>
+              <div className="ocasioes">{guia.ocasioes.map((o) => <span key={o} className="chip-ocasiao">{o}</span>)}</div>
+            </>
+          )}
           {guia.notasProva && (
             <>
               <h4 className="sub-grupo">Prova</h4>

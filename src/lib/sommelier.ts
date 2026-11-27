@@ -65,6 +65,9 @@ export function sugerir(vinhos: Vinho[], categoria?: Categoria, texto = ''): Sug
       });
       if (harm) { pontos += melhor; razoes.push(`Combina com ${harm.prato.charAt(0).toLowerCase()}${harm.prato.slice(1)}`); }
       else if (cat && (cat.tipos[v.tipo] ?? 0) >= 2) razoes.push(`${nomeTipo(v.tipo)}: boa escolha para ${cat.nome.toLowerCase()}`);
+      // Ocasiões do guia (verão, Natal, aperitivo…): contam se coincidirem com o pedido ou com a categoria.
+      const oc = guia.ocasioes?.find((o) => palavras.some((p) => p.length > 3 && s(o).includes(p)) || (cat && s(o).includes(s(cat.id))));
+      if (oc) { pontos += 2.5; razoes.push(`Boa para ${s(oc) === oc.toLowerCase() ? oc.toLowerCase() : oc}`); }
       if (guia.evitar?.some((e) => palavras.some((p) => s(e).includes(p)))) pontos -= 5;
 
       const janela = estadoJanela(v);
