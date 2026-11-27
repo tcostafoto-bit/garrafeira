@@ -23,6 +23,8 @@ export interface ItemImportado {
   avisos: string[];
   /** Campos de valor que o bloco manda explicitamente limpar (null), para apagar preços antigos. */
   limpar: ('valorMin' | 'valorMax' | 'valorEstimado')[];
+  /** Acrescentos ao guia que já existe (ocasiões, notas de prova, pratos...), sem refazer o guia todo. */
+  guiaMais?: Partial<GuiaVinho>;
 }
 
 export interface ResultadoLeitura { itens: ItemImportado[]; erros: string[] }
@@ -79,7 +81,7 @@ export function lerBloco(texto: string, atuais: Vinho[]): ResultadoLeitura {
         || porChave.get(chaveVinho(r.campos.nome!, r.campos.ano));
       const acao = acaoBloco === 'atualizar' && existente ? 'atualizar' : 'criar';
       if (acaoBloco === 'atualizar' && !existente) r.avisos.push('Não encontrei este vinho na garrafeira: vai ser criado.');
-      itens.push({ campos: r.campos, acao, existente: existente || undefined, avisos: r.avisos, limpar: r.limpar });
+      itens.push({ campos: r.campos, acao, existente: existente || undefined, avisos: r.avisos, limpar: r.limpar, guiaMais: guiaMais(bruto) });
     });
   });
   if (!itens.length && !erros.length) erros.push('Não encontrei nenhum vinho. Cola o bloco GARRAFEIRA v1 que o Claude te deu.');
@@ -175,10 +177,29 @@ function guia(v: unknown): GuiaVinho | undefined {
       corpo: nivel(p.corpo)!, acidez: nivel(p.acidez) ?? 3, taninos: nivel(p.taninos), docura: nivel(p.docura) ?? 1,
     } : undefined,
     notasProva: texto(g.notasProva),
+    ocasioes: listaTexto(g.ocasioes),
   };
   // tira as chaves vazias para o JSON ficar limpo
   Object.keys(r).forEach((k) => (r as unknown as Record<string, unknown>)[k] === undefined && delete (r as unknown as Record<string, unknown>)[k]);
   return r;
+}
+
+/** "guiaMais": só os pedaços novos do guia, juntos ao guia que o vinho já tem. */
+function guiaMais(bruto: unknown): Partial<GuiaVinho> | undefined {
+  const g = bruto && typeof bruto === 'object' ? (bruto as Record<string, unknown>).guiaMais : undefined;
+  if (!g || typeof g !== 'object') return undefined;
+  const x = g as Record<string, unknown>;
+  const harm = Array.isArray(x.harmonizacoes)
+    ? x.harmonizacoes.map((h) => (typeof h === 'string' ? { prato: h } : h && typeof h === 'object'
+      ? { prato: texto((h as Record<string, unknown>).prato) ?? '', porque: texto((h as Record<string, unknown>).porque) } : null))
+        .filter((h): h is { prato: string; porque: string | undefined } => !!h?.prato)
+    : undefined;
+  const r: Partial<GuiaVinho> = {
+    ocasioes: listaTexto(x.ocasioes), evitar: listaTexto(x.evitar), notasProva: texto(x.notasProva),
+    harmonizacoes: harm && harm.length ? harm : undefined,
+  };
+  Object.keys(r).forEach((k) => (r as Record<string, unknown>)[k] === undefined && delete (r as Record<string, unknown>)[k]);
+  return Object.keys(r).length ? r : undefined;
 }
 
 function normalizar(bruto: unknown): { campos: Partial<DadosVinho>; avisos: string[]; limpar: ItemImportado['limpar'] } | null {
@@ -201,6 +222,7 @@ function normalizar(bruto: unknown): { campos: Partial<DadosVinho>; avisos: stri
     volumeMl: numero(o.volumeMl),
     quantidade: numero(o.quantidade) !== undefined ? Math.max(0, Math.round(numero(o.quantidade)!)) : undefined,
     localizacao: texto(o.localizacao),
+    fotoUrl: (() => { const u = texto(o.fotoUrl); return u && /^https:\/\/[^\s]+$/i.test(u) ? u : undefined; })(),
     dataCompra: data(o.dataCompra),
     precoCompra: numero(o.precoCompra),
     localCompra: texto(o.localCompra),
@@ -288,6 +310,10 @@ export function aplicar(item: ItemImportado, escolha: Escolha): DadosVinho | nul
     quantidade: c.quantidade ?? e.quantidade,
   };
   item.limpar.forEach((k) => delete r[k]);
+  if (item.guiaMais) {
+    const g = c.guia ?? e.guia;
+    if (g) r.guia = { ...g, ...item.guiaMais };
+  }
   return r;
 }
 

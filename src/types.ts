@@ -45,6 +45,8 @@ export interface GuiaVinho {
   evitar?: string[];
   perfil?: { corpo: Nivel; acidez: Nivel; taninos?: Nivel; docura: Nivel };
   notasProva?: string;
+  /** Quando abrir: verão, inverno, Natal, aperitivo, digestivo, convívio, ocasião especial… */
+  ocasioes?: string[];
 }
 
 /** Uma loja ou site onde se viu o preço. A moeda é EUR se não vier indicada. */
@@ -115,6 +117,8 @@ export interface Vinho {
   criticas?: Criticas;
 
   fotoPath?: string;
+  /** Foto da garrafa na net (só o endereço). A foto do próprio Tiago ganha sempre. */
+  fotoUrl?: string;
   favorito: boolean;
   notas?: string;
   tags: string[];

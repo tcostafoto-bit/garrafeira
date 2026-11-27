@@ -139,3 +139,11 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - Regra do agregado: média arredondada das notas numéricas da mesma colheita (intervalos pelo ponto médio). Notas de outras colheitas, de comunidade (Vivino) ou de identidade não confirmada NÃO entram; ficam marcadas ou excluídas. Nada inventado.
 - Lote 1: 22 bebidas com dados (20 com agregado). Excluídos por identidade não confirmada: DoDa 2007, Vasques de Carvalho Vintage 2013, Freixenet Gran Cuvée. Muitas fontes pagas (Suckling, Jancis, Decanter, Wine Spectator) sem nota visível: não usadas.
 - Dados em fichas/criticas-lote1-2026-11-27.json. SQL 004 corrido por mim no Supabase.
+
+## v0.18 — Revisão geral da garrafeira
+- **Foto da net passa a campo da ficha (`fotoUrl`)**: coluna `foto_url` (migração 005, já corrida), importável no bloco (só https) e incluída na partilha só de leitura. A foto do Tiago ganha sempre; a lista fixa antiga fica como reserva.
+- **Ocasiões (`guia.ocasioes`)**: secção "Quando abrir" na ficha e bónus no sommelier (+2,5) quando a ocasião bate com o pedido.
+- **`guiaMais` no bloco**: acrescenta ocasiões/notas/pratos ao guia existente sem o refazer.
+- **Cartão "Revisão da garrafeira"** em Definições: conta o que falta (foto, guia, ocasiões, notas de críticos, valor).
+- Fotos da net: 29 referências preenchidas por pesquisa de imagens; algumas podem não ser a garrafa exata (Encostas do Côa Branco, Foral de Meda, Vital, Centúria). O Tiago substitui tirando foto própria.
+- Ocasiões atribuídas por estilo/categoria (não por pesquisa individual). Notas de críticos do lote 1 voltam a ir no bloco (idempotente).
