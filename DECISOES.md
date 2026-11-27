@@ -60,3 +60,6 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - **Juntei 7 fotos:** La Chapelle (site do château, garrafa sem colheita), Extrema Edição I, Sobroso Reserva, Cedro Branco, Niepoort LBV, Blackett 10 e DoDa (a foto é do DoDa tinto, outra colheita). Já são 35 dos 41.
 - **Ramos Pinto Cota Seiscentos e Duzentos:** só existe imagem do conjunto de 3 garrafas, e não consegui descarregá-la para recortar (o ambiente bloqueia o site). Não pus a do Duas Quintas Reserva, porque é outro vinho. Ficam com o rótulo desenhado.
 - **Continuam sem foto:** Foral de Meda, Marquês de Borba Colheita, Encostas do Côa Branco, Vasques LBV, Lourentim e o Porto da DHL (não encontrei imagem do mesmo vinho).
+
+## Número da versão (27/11/2026)
+- O «versão 0.5» das Definições estava escrito à mão e ficou parado. Passa a **0.6** e mostra também a data e o código da versão publicada (o do Vercel), para o Tiago confirmar que tem a última. O número sobe à mão em `vite.config.ts` quando há novidades; a data e o código mudam sozinhos em cada publicação.
