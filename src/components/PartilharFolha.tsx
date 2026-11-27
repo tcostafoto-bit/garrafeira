@@ -11,7 +11,7 @@ import type { Vinho } from '../types';
 export function PartilharFolha({ aberta, fechar, vinho }: { aberta: boolean; fechar: () => void; vinho?: Vinho }) {
   const tipo = vinho ? 'vinho' : 'garrafeira';
   const [partilha, setPartilha] = useState<Partilha | null | undefined>(undefined);
-  const [precos, setPrecos] = useState(false);
+  const [precos, setPrecos] = useState(true);
   const [ocupado, setOcupado] = useState(false);
   const [erro, setErro] = useState<string>();
   const [aviso, setAviso] = useState<string>();
@@ -23,7 +23,7 @@ export function PartilharFolha({ aberta, fechar, vinho }: { aberta: boolean; fec
       .then((l) => {
         const p = l.find((x) => x.tipo === tipo && (tipo === 'garrafeira' || x.vinhoId === vinho?.id)) ?? null;
         setPartilha(p);
-        setPrecos(p?.mostrarPrecos ?? false);
+        setPrecos(p?.mostrarPrecos ?? true);
       })
       .catch((e) => { setPartilha(null); setErro(e instanceof FaltaMigracao ? 'migracao' : 'Não consegui carregar. Confirma a ligação à internet.'); });
   }, [aberta, tipo, vinho?.id]);
@@ -65,7 +65,7 @@ export function PartilharFolha({ aberta, fechar, vinho }: { aberta: boolean; fec
 
       {!supabase && <div className="aviso">Pré-visualização: a ligação só abre neste browser.</div>}
       {erro && <div className="aviso" style={{ borderColor: 'rgba(224,138,120,.5)' }}>{erro === 'migracao'
-        ? <>Falta ativar a partilha na base de dados (uma única vez). Segue o guia que o Claude te enviou, o ficheiro «002_partilhas.sql».</> : erro}</div>}
+        ? <>Falta ativar a partilha na base de dados (uma única vez). Cola na base de dados o SQL que o Claude te enviou na conversa.</> : erro}</div>}
 
       {partilha === undefined && <p className="ajuda">A carregar…</p>}
 
