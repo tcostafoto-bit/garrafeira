@@ -11,7 +11,9 @@ export function AbrirHoje({ inv, abrir }: { inv: Inventario; abrir: (id: string)
   const [cat, setCat] = useState<Categoria | undefined>();
   const [texto, setTexto] = useState('');
   const pediu = !!cat || texto.trim().length > 2;
-  const sugestoes = useMemo(() => (pediu ? sugerir(inv.vinhos, cat, texto) : []), [inv.vinhos, cat, texto, pediu]);
+  const [todas, setTodas] = useState(false);
+  const todasSug = useMemo(() => (pediu ? sugerir(inv.vinhos, cat, texto) : []), [inv.vinhos, cat, texto, pediu]);
+  const sugestoes = todas ? todasSug : todasSug.slice(0, 3);
 
   return (
     <main className="ecra">
@@ -19,7 +21,7 @@ export function AbrirHoje({ inv, abrir }: { inv: Inventario; abrir: (id: string)
         <div>
           <div className="sobretitulo">Sommelier</div>
           <h1 className="titulo">O que abro hoje?</h1>
-          <p className="subtitulo">Escolhe o prato e sugiro três vinhos que tens em casa.</p>
+          <p className="subtitulo">Escolhe o prato ou a ocasião e sugiro o que tens em casa.</p>
         </div>
       </header>
 
@@ -27,12 +29,12 @@ export function AbrirHoje({ inv, abrir }: { inv: Inventario; abrir: (id: string)
         <Icone nome="pesquisa" tamanho={20} />
         <span className="sr-only">Prato</span>
         <input type="search" placeholder="Escreve o prato, ex.: arroz de pato" value={texto}
-          onChange={(e) => { setTexto(e.target.value); setCat(undefined); }} enterKeyHint="search" />
+          onChange={(e) => { setTexto(e.target.value); setCat(undefined); setTodas(false); }} enterKeyHint="search" />
       </label>
       <div className="chips-grelha" style={{ marginTop: 14 }}>
         {CATEGORIAS.map((c) => (
           <button key={c.id} className={`chip${cat?.id === c.id ? ' ativo' : ''}`} aria-pressed={cat?.id === c.id}
-            onClick={() => { setCat(cat?.id === c.id ? undefined : c); setTexto(''); }}>{c.nome}</button>
+            onClick={() => { setCat(cat?.id === c.id ? undefined : c); setTexto(''); setTodas(false); }}>{c.nome}</button>
         ))}
       </div>
 
@@ -69,6 +71,11 @@ export function AbrirHoje({ inv, abrir }: { inv: Inventario; abrir: (id: string)
                 );
               })}
             </ol>
+          )}
+          {todasSug.length > 3 && (
+            <button className="ligacao" style={{ marginTop: 14 }} onClick={() => setTodas(!todas)}>
+              {todas ? 'Mostrar só as 3 melhores' : `Mostrar todas (${todasSug.length})`}
+            </button>
           )}
         </section>
       )}
