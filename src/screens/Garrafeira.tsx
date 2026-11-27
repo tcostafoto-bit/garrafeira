@@ -123,6 +123,16 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
     gravarLS(CHAVE_ORDEM, completa);
   };
 
+  /** Ver todos os que pedem atenção: aplica o filtro, limpa pesquisa e pontuação e leva o ecrã até à lista. */
+  const verTodosAtencao = () => {
+    setFiltro('atencao'); setTexto(''); setMinimo(0);
+    setTimeout(() => {
+      const c = document.getElementById('filtros-garrafeira');
+      c?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      c?.querySelector('.chip.ativo')?.scrollIntoView({ inline: 'center', block: 'nearest' });
+    }, 60);
+  };
+
   const vazia = estado === 'pronto' && vinhos.length === 0;
 
   return (
@@ -151,7 +161,7 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
         <section className="cartao alertas" aria-label="Vinhos a pedir atenção">
           <div className="alertas-topo">
             <strong>{alertas.length} {alertas.length === 1 ? 'vinho a pedir atenção' : 'vinhos a pedir atenção'}</strong>
-            <button className="ligacao" onClick={() => setFiltro('atencao')}>Ver todos</button>
+            <button className="ligacao" onClick={verTodosAtencao}>Ver todos</button>
           </div>
           <ul>
             {alertas.slice(0, 3).map(({ v, a }) => (
@@ -207,7 +217,7 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
             )}
           </label>
 
-          <div className="chips" role="tablist" aria-label="Filtros">
+          <div className="chips" role="tablist" aria-label="Filtros" id="filtros-garrafeira">
             {filtros.map((f) => (
               <button key={f.id} role="tab" aria-selected={filtroAtivo === f.id}
                 className={`chip${filtroAtivo === f.id ? ' ativo' : ''}`} onClick={() => setFiltro(f.id)}>
