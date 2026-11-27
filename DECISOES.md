@@ -147,3 +147,7 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - **Cartão "Revisão da garrafeira"** em Definições: conta o que falta (foto, guia, ocasiões, notas de críticos, valor).
 - Fotos da net: 29 referências preenchidas por pesquisa de imagens; algumas podem não ser a garrafa exata (Encostas do Côa Branco, Foral de Meda, Vital, Centúria). O Tiago substitui tirando foto própria.
 - Ocasiões atribuídas por estilo/categoria (não por pesquisa individual). Notas de críticos do lote 1 voltam a ir no bloco (idempotente).
+
+## v0.19 — "Ver todos" nos vinhos a pedir atenção
+- Corrigido: o botão aplicava o filtro mas o ecrã não se mexia, parecia que nada abria. Agora aplica o filtro, limpa pesquisa e pontuação e leva o ecrã até à lista filtrada.
+- Auditoria de design: ficou por fazer lista de desejos/compras (precisa de tabela própria), notificações de janela de consumo (iPhone só com servidor de push, tem custo/complexidade) e estatísticas por região/ano.
