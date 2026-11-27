@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { fotoProps } from '../lib/imagens';
 import { FotoVinho } from '../components/FotoVinho';
 import { Icone } from '../components/Icone';
 import { Estrelas } from '../components/AbrirGarrafa';
@@ -59,7 +60,7 @@ export function Diario({ inv, abrir }: { inv: Inventario; abrir: (id: string) =>
                   return (
                     <li key={c.id}>
                       <button className="linha-vinho" onClick={() => v && abrir(v.id)} disabled={!v}>
-                        <FotoVinho tipo={v?.tipo ?? 'outro'} url={v?.fotoPath ? inv.urls[caminhoMini(v.fotoPath)] : undefined} altura={70} className="mini" rotulo={v ? { nome: v.nome, ano: v.ano } : undefined} />
+                        <FotoVinho tipo={v?.tipo ?? 'outro'} {...(v ? fotoProps(v, inv.urls, true) : {})} altura={70} className="mini" rotulo={v ? { nome: v.nome, ano: v.ano } : undefined} />
                         <span className="linha-vinho-texto">
                           <span className="linha-vinho-nome">{v?.nome ?? 'Vinho apagado'}</span>
                           <span className="linha-vinho-sub">{[dia(c.data), v?.ano, c.ocasiao].filter(Boolean).join(' · ')}</span>

@@ -47,3 +47,11 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - **A minha ordem:** nova opção de ordenação com «Arrumar» (setas ↑↓ por vinho). A ordem e a ordenação escolhida ficam guardadas **neste telemóvel** (não vão para a base de dados), porque guardar na nuvem pedia uma migração SQL nova e arriscava partir a app se faltasse a coluna. Vinhos novos entram no fim.
 - **Alertas:** cartão «a pedir atenção» no topo da Garrafeira, filtro «A pedir atenção» e aviso em cada linha. «Passou da janela» quando o ano é depois do fim da janela; «breve» no último ano da janela e no anterior. Só vinhos com janela e com garrafas.
 - **Rótulos:** a garrafa sem foto traz o rótulo desenhado com produtor, nome e ano. Se houver foto, mostra-se a foto.
+
+## Fotos reais das garrafas (27/11/2026)
+- **Origem:** fotos de garrafa das páginas de lojas e produtores já usadas nas fontes de preço (Garrafeira Soares, Garrafeira Nacional, Wine House Portugal, Fernando's Wine House, Vinhos do Alentejo, etc.). Cobre 28 dos 41 vinhos.
+- **Direitos:** são imagens de terceiros. Por isso só guardo o **endereço**, a app mostra-as a partir do site de origem e não as copia nem as põe no repositório. Uso pessoal, numa app privada. Se um site as bloquear ou apagar, a ficha volta ao desenho da garrafa com o rótulo.
+- **Prioridade:** a foto do Tiago ganha sempre. Sem foto dele, usa a da loja. Nada é escrito na base de dados (sem migração, sem passo para o Tiago).
+- **Sem foto da loja** (ficam com o desenho): La Chapelle (a página é de caixa), Ramos Pinto (só imagem de conjunto), Extrema, Foral de Meda, Encostas do Côa, Marquês de Borba, Sobroso, Cedro Branco, Niepoort LBV, Vasques LBV, DoDa (a foto era de outra colheita e ilustrativa), Blackett, Lourentim (a página era do branco), Porto DHL.
+- **Aproximações:** Alcunha usa a foto da colheita 2018; Noval Reserva 2019 usa a foto da Reserva de outra colheita; Quinta do Mouro, Diálogo e Mionetto também podem ser de outra colheita.
+- **Não verificado:** não consegui ver as imagens nem testar os endereços a partir do ambiente de trabalho (proxy). Os endereços vêm do HTML das páginas. Os da Garrafeira Soares (pasta «temp») podem deixar de funcionar.

@@ -411,3 +411,9 @@ textarea.bloco { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-si
 .mover { display: flex; flex-direction: column; gap: 6px; justify-content: center; }
 .mover button { width: 44px; height: 44px; border-radius: 12px; background: var(--superficie); border: 1px solid var(--linha); color: var(--dourado); font-size: 20px; }
 .mover button:disabled { opacity: 0.3; }
+
+/* Foto de loja: fundo claro e imagem inteira, sem cortar */
+.foto-vinho.externa { background: #f3eee6; }
+.foto-vinho.externa img { object-fit: contain; padding: 4px; }
+.foto-vinho.grande.externa { background: none; }
+.ficha-heroi .foto-vinho.grande.externa img { background: #f3eee6; padding: 12px 28px; border-radius: 16px; }

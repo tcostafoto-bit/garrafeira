@@ -4,7 +4,7 @@ import { FotoVinho } from '../components/FotoVinho';
 import { Icone } from '../components/Icone';
 import { formatarEuro } from '../lib/formatos';
 import { alertaJanela, estadoJanela } from '../lib/janela';
-import { caminhoMini } from '../lib/vinhos';
+import { fotoProps } from '../lib/imagens';
 import { TIPOS, type TipoVinho, type Vinho } from '../types';
 import type { Inventario } from '../hooks/useVinhos';
 
@@ -234,7 +234,7 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
           ) : (
             <ul className="lista">
               {lista.map((v, i) => (
-                <LinhaVinho key={v.id} v={v} url={v.fotoPath ? urls[caminhoMini(v.fotoPath)] : undefined} abrir={abrir}
+                <LinhaVinho key={v.id} v={v} urls={urls} abrir={abrir}
                   mover={arrumar && ordem === 'minha' ? (p) => mover(v.id, p) : undefined}
                   primeiro={i === 0} ultimo={i === lista.length - 1} />
               ))}
@@ -246,8 +246,8 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
   );
 }
 
-function LinhaVinho({ v, url, abrir, mover, primeiro, ultimo }:
-  { v: Vinho; url?: string; abrir: (id: string) => void; mover?: (p: -1 | 1) => void; primeiro: boolean; ultimo: boolean }) {
+function LinhaVinho({ v, urls, abrir, mover, primeiro, ultimo }:
+  { v: Vinho; urls: Record<string, string>; abrir: (id: string) => void; mover?: (p: -1 | 1) => void; primeiro: boolean; ultimo: boolean }) {
   const janela = estadoJanela(v);
   const alerta = v.quantidade > 0 ? alertaJanela(v) : undefined;
   const linha2 = [v.produtor, v.ano ?? 'NV'].filter(Boolean).join(' · ');
@@ -261,7 +261,7 @@ function LinhaVinho({ v, url, abrir, mover, primeiro, ultimo }:
         </span>
       )}
       <button className={`linha-vinho${v.quantidade === 0 ? ' acabado' : ''}`} onClick={() => abrir(v.id)}>
-        <FotoVinho tipo={v.tipo} url={url} altura={70} className="mini" rotulo={{ nome: v.nome, ano: v.ano }} />
+        <FotoVinho tipo={v.tipo} {...fotoProps(v, urls, true)} altura={70} className="mini" rotulo={{ nome: v.nome, ano: v.ano }} />
         <span className="linha-vinho-texto">
           <span className="linha-vinho-nome">{v.nome}</span>
           <span className="linha-vinho-sub">{linha2}</span>

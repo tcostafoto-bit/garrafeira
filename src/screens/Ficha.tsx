@@ -16,8 +16,8 @@ const formatarVolume = (ml: number) => (ml >= 1000 ? `${(ml / 1000).toLocaleStri
 
 const DECANTAR = { nao: 'Não precisa', opcional: 'Opcional', sim: 'Sim' } as const;
 
-export function Ficha({ v, url, consumos, fechar, editar, mudarQuantidade, alternarFavorito, apagar, abrirGarrafa }: {
-  v: Vinho; url?: string; consumos: Consumo[]; fechar: () => void; editar: () => void;
+export function Ficha({ v, foto, consumos, fechar, editar, mudarQuantidade, alternarFavorito, apagar, abrirGarrafa }: {
+  v: Vinho; foto: { url?: string; externa?: boolean }; consumos: Consumo[]; fechar: () => void; editar: () => void;
   mudarQuantidade: (q: number) => void; alternarFavorito: () => void; apagar: () => Promise<void>;
   abrirGarrafa: (c: Omit<Consumo, 'id'>) => Promise<void>;
 }) {
@@ -53,7 +53,7 @@ export function Ficha({ v, url, consumos, fechar, editar, mudarQuantidade, alter
       </div>
 
       <div className="ficha-heroi" style={{ ['--cor-tipo' as string]: `var(--${v.tipo})` }}>
-        <FotoVinho tipo={v.tipo} url={url} altura={240} className="grande" rotulo={{ nome: v.nome, produtor: v.produtor, ano: v.ano }} />
+        <FotoVinho tipo={v.tipo} {...foto} altura={240} className="grande" rotulo={{ nome: v.nome, produtor: v.produtor, ano: v.ano }} />
       </div>
 
       <div className="ficha-corpo">
