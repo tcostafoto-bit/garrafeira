@@ -4,6 +4,7 @@ import { useVinhos } from './hooks/useVinhos';
 import { BottomNav, type Separador } from './components/BottomNav';
 import { useAviso } from './components/Aviso';
 import { Entrar } from './screens/Entrar';
+import { fotoProps } from './lib/imagens';
 import { Garrafeira } from './screens/Garrafeira';
 import { Definicoes } from './screens/Definicoes';
 import { Adicionar } from './screens/Adicionar';
@@ -80,7 +81,7 @@ export default function App() {
         claude={() => { setAdicionar(false); setVista({ tipo: 'claude' }); }} />
 
       {vista.tipo === 'ficha' && aberto && (
-        <Ficha v={aberto} url={aberto.fotoPath ? inv.urls[aberto.fotoPath] ?? inv.urls[caminhoMini(aberto.fotoPath)] : undefined}
+        <Ficha v={aberto} foto={fotoProps(aberto, inv.urls, false)}
           consumos={inv.consumos.filter((c) => c.vinhoId === aberto.id)}
           abrirGarrafa={async (c) => {
             try { await inv.abrirGarrafa(c); avisar('Saúde! Ficou no Diário.'); }
