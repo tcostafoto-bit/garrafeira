@@ -120,3 +120,8 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 ## v0.14 — Filtros na página partilhada (2026-11-27)
 - Os amigos podem filtrar por tipo de bebida (chips), país, região (depende do país), década do ano e casta (folha "Filtros"), pesquisar por nome/produtor/região/país/casta e ordenar por nome, ano ou valor (valor só se o preço estiver visível). Contagem de resultados e "Limpar".
 - Tudo no cliente com os campos que a função ver_partilha já devolve; nada de privado exposto. "Localização" = país/região do vinho, não onde está guardado. Sem SQL novo.
+
+## v0.15 — Valor nas linhas, Abrir hoje completo, valor por tipo (2026-11-27)
+- Cada cartão da lista mostra o valor por garrafa e, com mais de uma, "cada · total". Cartão de resumo ganha "Valor por tipo" (garrafas e valor por tipo + total geral).
+- Abrir hoje: antes só mostrava 3 sugestões e as restantes nunca apareciam (ex.: CV Branco). Agora há "Mostrar todas" e só entram os vinhos cujo tipo ou pratos do guia combinam com a categoria. Novas ocasiões para bebidas sem janela: Digestivo, Brinde ou festa, Cerveja e convívio, Provar a solo; whisky/licor/cerveja/sidra/saquê também entram em pratos adequados.
+- Teste com 50 itens (65 garrafas) das fichas: todos aparecem em pelo menos uma ocasião.

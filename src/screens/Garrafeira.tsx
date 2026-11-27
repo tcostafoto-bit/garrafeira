@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GarrafaSilhueta } from '../components/GarrafaSilhueta';
 import { FotoVinho } from '../components/FotoVinho';
+import { BottomSheet } from '../components/BottomSheet';
 import { Icone } from '../components/Icone';
 import { formatarEuro } from '../lib/formatos';
 import { alertaJanela, estadoJanela } from '../lib/janela';
@@ -49,6 +50,11 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
   const naGarrafeira = vinhos.filter((v) => v.quantidade > 0);
   const garrafas = naGarrafeira.reduce((s, v) => s + v.quantidade, 0);
   const valor = naGarrafeira.reduce((s, v) => s + v.quantidade * valorGarrafa(v), 0);
+  const [verValores, setVerValores] = useState(false);
+  const porTipo = TIPOS.map((t) => {
+    const l = naGarrafeira.filter((v) => v.tipo === t.id);
+    return { ...t, garrafas: l.reduce((a, v) => a + v.quantidade, 0), valor: l.reduce((a, v) => a + v.quantidade * valorGarrafa(v), 0) };
+  }).filter((t) => t.garrafas > 0).sort((a, b) => b.valor - a.valor);
   const prontos = naGarrafeira.filter((v) => estadoJanela(v) === 'no-ponto').length;
 
   const alertas = naGarrafeira
@@ -133,6 +139,7 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
         <div className="resumo-linha">
           <span className="ponto" style={{ background: 'var(--no-ponto)' }} />
           {prontos} {prontos === 1 ? 'pronto' : 'prontos'} a beber
+          {porTipo.length > 0 && <button className="ligacao" style={{ marginLeft: 'auto' }} onClick={() => setVerValores(true)}>Valor por tipo</button>}
         </div>
       </section>
 
@@ -242,6 +249,21 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
           )}
         </>
       )}
+      <BottomSheet aberta={verValores} fechar={() => setVerValores(false)} titulo="Valor por tipo">
+        <ul className="valor-tipos">
+          {porTipo.map((t) => (
+            <li key={t.id}>
+              <span className="ponto" style={{ background: `var(--${t.id})` }} />
+              <span className="vt-nome">{t.nome}<small>{t.garrafas} {t.garrafas === 1 ? 'garrafa' : 'garrafas'}</small></span>
+              <span className="num">{formatarEuro(t.valor, true)}</span>
+            </li>
+          ))}
+          <li className="vt-total">
+            <span className="vt-nome">Total<small>{garrafas} {garrafas === 1 ? 'garrafa' : 'garrafas'}</small></span>
+            <span className="num dourado">{formatarEuro(valor, true)}</span>
+          </li>
+        </ul>
+      </BottomSheet>
     </main>
   );
 }
@@ -251,6 +273,10 @@ function LinhaVinho({ v, urls, abrir, mover, primeiro, ultimo }:
   const janela = estadoJanela(v);
   const alerta = v.quantidade > 0 ? alertaJanela(v) : undefined;
   const linha2 = [v.produtor, v.ano ?? 'NV'].filter(Boolean).join(' · ');
+  const unit = valorGarrafa(v);
+  const linhaValor = unit > 0 && v.quantidade > 0
+    ? (v.quantidade > 1 ? `${formatarEuro(unit, true)} cada · total ${formatarEuro(unit * v.quantidade, true)}` : formatarEuro(unit, true))
+    : undefined;
   const linha3 = [TIPOS.find((t) => t.id === v.tipo)?.nome, v.regiao].filter(Boolean).join(' · ');
   return (
     <li className={mover ? 'com-mover' : undefined}>
@@ -268,6 +294,7 @@ function LinhaVinho({ v, urls, abrir, mover, primeiro, ultimo }:
           <span className="linha-vinho-sub fraco">
             <span className="ponto" style={{ background: `var(--${v.tipo})` }} /> {linha3}
           </span>
+          {linhaValor && <span className="linha-vinho-valor num">{linhaValor}</span>}
           {alerta && <span className="linha-vinho-alerta" style={{ color: alerta.tipo === 'passou' ? 'var(--a-passar)' : 'var(--dourado)' }}>{alerta.texto}</span>}
         </span>
         <span className="linha-vinho-lado">
