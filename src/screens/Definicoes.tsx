@@ -141,7 +141,7 @@ export function Definicoes({ email, inv, avisar, carregarExemplos, importarClaud
         <p className="nota-grupo">Seis vinhos portugueses para experimentar. Saem todos de uma vez com o botão acima.</p>
       </div>
 
-      <p className="ajuda" style={{ marginTop: 32 }}>Garrafeira · versão 0.5</p>
+      <p className="ajuda" style={{ marginTop: 32 }}>Garrafeira · versão {__VERSAO__} · {__BUILD__}</p>
 
       <BottomSheet aberta={!!aImportar} fechar={() => setAImportar(null)} titulo="Importar backup?">
         <p style={{ color: 'var(--texto-2)', marginTop: 0 }}>
