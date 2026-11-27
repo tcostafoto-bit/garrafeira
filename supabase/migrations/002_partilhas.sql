@@ -13,10 +13,12 @@ create table if not exists public.partilhas (
   token text not null unique default replace(gen_random_uuid()::text || gen_random_uuid()::text, '-', ''),
   tipo text not null check (tipo in ('garrafeira', 'vinho')),
   vinho_id uuid references public.vinhos on delete cascade,
-  mostrar_precos boolean not null default false,
+  mostrar_precos boolean not null default true,
   criado_em timestamptz not null default now(),
   constraint partilhas_vinho_certo check ((tipo = 'vinho') = (vinho_id is not null))
 );
+
+alter table public.partilhas alter column mostrar_precos set default true;
 
 create index if not exists partilhas_user_idx on public.partilhas (user_id);
 -- Uma ligação para a garrafeira toda e uma por vinho.

@@ -79,3 +79,8 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - **A fazer pelo Tiago (uma vez):** correr `002_partilhas.sql` no SQL Editor do Supabase. Sem isso a app avisa que falta ativar.
 - **Pré-visualização (sem Supabase):** a ligação só abre no mesmo browser.
 - Corrigido de caminho: as folhas (BottomSheet) passam a renderizar no `body`, porque nas Definições ficavam fora do ecrã.
+
+## Partilha: valor visível por defeito (27/11/2026, v0.10)
+- A pedido do Tiago, o **valor estimado aparece por defeito** na partilha (interruptor ligado; coluna `mostrar_precos` passa a `default true`). Pode desligar-se por ligação. O preço de compra continua a nunca sair, tal como notas, locais e as fotos do próprio Tiago.
+- A foto partilhada é a de loja ou, na falta dela, o rótulo desenhado na garrafa.
+- Os passos para o Tiago vão sempre escritos na conversa (com o SQL dentro da mensagem), não em ficheiros ou ligações.
