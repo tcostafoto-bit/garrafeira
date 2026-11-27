@@ -9,7 +9,11 @@ import type { Vinho } from '../types';
 
 const LISTA: [string, number | undefined, string][] = [
   ["Quinta do Vale Meão", 2018, "https://www.garrafeirasoares.pt/temp/JPG_e4735985168a821e708abdf5fed7ec80.png"],
-  ["CV Curriculum Vitae", 2019, "https://media.radar.wine/media/wines/ddb2ad5b-8195-46bd-a6d5-e0ab3792247f.png"],
+  ["CV Curriculum Vitae", 2019, "https://media.radar.wine/media/wines/ee570dc3-2e3c-48fe-b8a6-8171b28082a8.jpg"],
+  ["CV Curriculum Vitae Branco", 2019, "https://media.radar.wine/media/wines/e923197d-99e0-41dc-a581-75d0217f895f.png"],
+  ["Poças Reserva", 2018, "https://media.radar.wine/media/wines/00aef554-99ad-43a5-a32b-ed1cdee51cfb.jpg"],
+  ["Herdade Aldeia de Cima Reserva", 2022, "https://media.radar.wine/media/wines/8099dec9-bb1d-4e4c-9cb8-1cf984433f34.jpg"],
+  ["Palato do Côa", 2022, "https://winehouseportugal.com/14316-large_default/palato-do-coa-2019-red-wine.jpg"],
   ["Quinta do Noval Touriga Nacional", 2020, "https://www.garrafeiranacional.com/media/catalog/product/cache/fb03a175f41adaae5cd7bd727048b47c/6/0/6063588-0.jpg"],
   ["Quinta do Noval Reserva", 2020, "https://winehouseportugal.com/14810-large_default/quinta-do-noval-reserva-2017-red-wine-in-the-90s-one-hundred-hectares-of-quinta-do-noval-were-replanted-adapting-the-pruning-met.jpg"],
   ["Quinta do Noval Reserva", 2019, "https://winehouseportugal.com/14810-large_default/quinta-do-noval-reserva-2017-red-wine-in-the-90s-one-hundred-hectares-of-quinta-do-noval-were-replanted-adapting-the-pruning-met.jpg"],
