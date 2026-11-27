@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 export function BottomSheet({ aberta, fechar, titulo, children }:
   { aberta: boolean; fechar: () => void; titulo?: string; children: ReactNode }) {
@@ -10,7 +11,7 @@ export function BottomSheet({ aberta, fechar, titulo, children }:
   }, [aberta, fechar]);
 
   if (!aberta) return null;
-  return (
+  return createPortal(
     <>
       <div className="veu" onClick={fechar} />
       <div className="folha" role="dialog" aria-modal="true" aria-label={titulo}>
@@ -18,6 +19,7 @@ export function BottomSheet({ aberta, fechar, titulo, children }:
         {titulo && <h2>{titulo}</h2>}
         {children}
       </div>
-    </>
+    </>,
+    document.body,
   );
 }

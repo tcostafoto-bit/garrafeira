@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Icone } from '../components/Icone';
 import { BottomSheet } from '../components/BottomSheet';
+import { PartilharFolha } from '../components/PartilharFolha';
 import { lerBackup, partilharBackup } from '../lib/backup';
 import { textoInventario } from '../lib/ponte';
 import { TAG_EXEMPLO } from '../lib/exemplos';
@@ -13,6 +14,7 @@ export function Definicoes({ email, inv, avisar, carregarExemplos, importarClaud
   const ficheiro = useRef<HTMLInputElement>(null);
   const [aImportar, setAImportar] = useState<DadosVinho[] | null>(null);
   const [ocupado, setOcupado] = useState(false);
+  const [partilhar, setPartilhar] = useState(false);
   const exemplos = inv.vinhos.filter((v) => v.tags.includes(TAG_EXEMPLO));
   const comFoto = inv.vinhos.filter((v) => v.fotoPath).length;
 
@@ -88,6 +90,16 @@ export function Definicoes({ email, inv, avisar, carregarExemplos, importarClaud
       </div>
 
       <div className="grupo">
+        <h3 className="grupo-titulo">Amigos</h3>
+        <div className="cartao lista">
+          <button className="linha-def" style={{ width: '100%' }} onClick={() => setPartilhar(true)}>
+            <span>Partilhar a garrafeira, só para ver</span><Icone nome="partilhar" tamanho={18} />
+          </button>
+        </div>
+        <p className="nota-grupo">Cria uma ligação que podes enviar a amigos. Podes desligá-la quando quiseres. Para partilhar uma só garrafa, abre o vinho e toca no botão de partilhar.</p>
+      </div>
+
+      <div className="grupo">
         <h3 className="grupo-titulo">Claude</h3>
         <div className="cartao lista">
           <button className="linha-def" style={{ width: '100%' }} disabled={!inv.vinhos.length} onClick={copiarInventario}>
@@ -152,6 +164,7 @@ export function Definicoes({ email, inv, avisar, carregarExemplos, importarClaud
         <button className="botao largo" disabled={ocupado} onClick={importar}>{ocupado ? 'A importar…' : 'Importar'}</button>
         <button className="botao secundario largo" style={{ marginTop: 10 }} onClick={() => setAImportar(null)}>Cancelar</button>
       </BottomSheet>
+      <PartilharFolha aberta={partilhar} fechar={() => setPartilhar(false)} />
     </main>
   );
 }
