@@ -113,3 +113,6 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - Importação aceita sinónimos (cognac, gin, rum, beer, etc.).
 - Migração 003 (alarga a restrição do tipo; não apaga dados; idempotente; testada em Postgres local). Tem de ser corrida pelo Tiago no Supabase.
 - Bowmore 30 Anos Sea Dragon passa a tipo whisky.
+
+## SQL corrido no Supabase (2026-11-27)
+- A pedido do Tiago, corri eu as migrações 002 (partilhas) e 003 (bebidas) no SQL Editor, no Chrome (Browser 2, o mais recente, já com sessão). Confirmado: tabela partilhas e função ver_partilha existem, restrição do tipo aceita whisky, 47 vinhos intactos. O aviso de "operações destrutivas" do Supabase era só dos drop policy/constraint idempotentes.
