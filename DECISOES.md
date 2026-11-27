@@ -97,3 +97,7 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - **Juntei:** CV tinto 2019 (agora a foto do magnum), CV Branco, Poças Reserva, Aldeia de Cima Reserva 2022 e Palato do Côa. Duas são «imagem ilustrativa» do site (Poças e Aldeia de Cima) e a do Palato é de outra colheita (mesmo rótulo de gama); não consegui abrir as imagens daqui para as ver, por isso o Tiago deve avisar se alguma estiver errada.
 - **Sem foto:** Aldeia de Cima 2024 (branco), porque não encontrei imagem do mesmo vinho.
 - **Bloco único:** o Tiago pediu um só código com os 6 vinhos. Vai como `"acao":"atualizar"`: se o CV 2019 já existir, é atualizado (formato e valor, sem somar garrafas); se não existir, é criado com todos os dados; os restantes são criados. Testado nos dois casos.
+
+## Aldeia de Cima 2024 é tinto (27/11/2026, v0.12)
+- O Tiago acha que o Reserva 2024 (cápsula verde) é **tinto**, por isso passa a tinto, com guia, valor (14 €) e foto do Reserva tinto. Decisão dele; a minha dedução anterior (branco) assentava só na cápsula.
+- **Whisky:** não encontrei nenhuma garrafa de whisky nas fotos nem nas fichas (as 13 fotos de 26/11, as 5 de 27/11 e as capturas de ecrã). Pedi-lhe a foto. O esquema da app só tem tipos de vinho; um destilado ficaria como «Outro».
