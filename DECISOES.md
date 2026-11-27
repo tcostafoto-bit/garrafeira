@@ -101,3 +101,8 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 ## Aldeia de Cima 2024 é tinto (27/11/2026, v0.12)
 - O Tiago acha que o Reserva 2024 (cápsula verde) é **tinto**, por isso passa a tinto, com guia, valor (14 €) e foto do Reserva tinto. Decisão dele; a minha dedução anterior (branco) assentava só na cápsula.
 - **Whisky:** não encontrei nenhuma garrafa de whisky nas fotos nem nas fichas (as 13 fotos de 26/11, as 5 de 27/11 e as capturas de ecrã). Pedi-lhe a foto. O esquema da app só tem tipos de vinho; um destilado ficaria como «Outro».
+
+## Bowmore 30 Anos Sea Dragon (27/11/2026, v0.12)
+- A «de whisky» do Tiago é o **Bowmore 30 anos, série Sea Dragon**, garrafa de cerâmica, 70 cl, 43 %, em caixa preta com cetim vermelho (edição dos anos 1990). Entra como tipo **«Outro»**, porque a app só tem tipos de vinho, com guia próprio (sem decantar, sem gelo, copo Glencairn).
+- **Valor 1.700 €** (entre 1.550 e 2.500 €): leilões de 70 cl/43 % acabados a 1.350 £ e 1.450 £ em 2024 (um com caixa) e 2.200 £ em 2021; uma loja pede 3.500 £ (preço pedido, não vendido). Convertido a cerca de 1,15 €/£. As ofertas de 75 cl ficaram de fora.
+- Foto: a de um leilão da mesma edição (cerâmica). Não consegui abri-la daqui.
