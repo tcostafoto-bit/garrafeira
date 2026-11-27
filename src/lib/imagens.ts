@@ -35,6 +35,13 @@ const LISTA: [string, number | undefined, string][] = [
   ["Graham's 10 Anos Tawny", undefined, "https://assets.wine.com/winecom/image/upload/5972fbs.jpg"],
   ["Poças 10 Anos Tawny", undefined, "https://winehouseportugal.com/11465-large_default/pocas-10-years-old-port-wine-it-all-began-in-1918-when-on-15-august-a-few-months-before-the-armistice-manoel-domingues-pocas-jun.jpg"],
   ["Caves Santa Marta Tawny", undefined, "https://media.radar.wine/media/wines/9708e2ae-2506-44b5-bf9b-9ba1f8aeab5b.jpg"],
+  ["La Chapelle de La Mission Haut-Brion", 2016, "https://www.mission-haut-brion.com/wp-content/uploads/sites/4/2022/04/LCR-Bouteille-sans-mill%C3%A9sime-min-377x1024.png"],
+  ["Quinta da Extrema Edição I", undefined, "https://winehouseportugal.com/14399-large_default/quinta-da-extrema-edicao-i-2016-vinho-branco.jpg"],
+  ["Herdade do Sobroso Reserva Barrique Select", 2018, "https://portugalgetwine.com/3092-large_default/herdade-do-sobroso-reserva-barrique-select-white-wine.jpg"],
+  ["Cedro do Noval Branco", 2022, "https://www.quintadonoval.com/image/millesime/178/cedro-do-noval-blanc-bouteille-site.png"],
+  ["Niepoort LBV Unfiltered", 2018, "https://assets.wine.com/winecom/image/upload/si4ciw4re0stigpscjm3.jpg"],
+  ["Blackett 10 Anos Tawny", undefined, "https://fernandoswinehouse.pt/media/catalog/product/cache/5970251792703050f1e38d1c1c28a474/5/8/58.02478-01-porto-blackett-10-anos.png"],
+  ["DoDa", 2007, "https://media.radar.wine/media/wines/4108b0f1-5303-4456-aa8f-b464324479b6.jpg"],
 ];
 
 const IMAGENS = new Map(LISTA.map(([nome, ano, url]) => [chaveVinho(nome, ano), url]));
