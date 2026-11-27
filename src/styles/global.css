@@ -395,3 +395,19 @@ textarea.bloco { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-si
 .sugestao { position: relative; }
 .sugestao-n { position: absolute; top: 8px; left: 8px; z-index: 1; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; background: var(--dourado); color: var(--fundo); }
 .fonte-nota { display: block; font-size: 12px; color: var(--texto-3); margin-top: 2px; }
+
+/* Alertas da janela e ordem manual */
+.alertas { margin-top: 16px; padding: 14px 16px; }
+.alertas-topo { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; margin-bottom: 6px; }
+.alertas ul { list-style: none; margin: 0; padding: 0; }
+.alertas li button { width: 100%; display: flex; align-items: center; gap: 10px; text-align: left; padding: 8px 0; }
+.alertas li + li { border-top: 1px solid var(--linha); }
+.alertas-texto { display: flex; flex-direction: column; min-width: 0; }
+.alertas-nome { font-family: var(--serif); font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.alertas-sub { font-size: 12px; color: var(--texto-3); }
+.linha-vinho-alerta { font-size: 12px; }
+.lista li.com-mover { display: flex; align-items: stretch; gap: 8px; }
+.lista li.com-mover .linha-vinho { flex: 1; min-width: 0; }
+.mover { display: flex; flex-direction: column; gap: 6px; justify-content: center; }
+.mover button { width: 44px; height: 44px; border-radius: 12px; background: var(--superficie); border: 1px solid var(--linha); color: var(--dourado); font-size: 20px; }
+.mover button:disabled { opacity: 0.3; }

@@ -53,7 +53,7 @@ export function Ficha({ v, url, consumos, fechar, editar, mudarQuantidade, alter
       </div>
 
       <div className="ficha-heroi" style={{ ['--cor-tipo' as string]: `var(--${v.tipo})` }}>
-        <FotoVinho tipo={v.tipo} url={url} altura={200} className="grande" />
+        <FotoVinho tipo={v.tipo} url={url} altura={240} className="grande" rotulo={{ nome: v.nome, produtor: v.produtor, ano: v.ano }} />
       </div>
 
       <div className="ficha-corpo">

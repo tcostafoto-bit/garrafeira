@@ -34,3 +34,18 @@ export function textoJanela(v: Vinho): string | undefined {
   if (g.janelaAte) return `até ${g.janelaAte}`;
   return undefined;
 }
+
+export interface AlertaJanela { tipo: 'passou' | 'breve'; texto: string }
+
+/** Avisos de tempo a mais (já passou a janela) ou a passar (acaba este ano ou no próximo). */
+export function alertaJanela(v: Vinho, ano = new Date().getFullYear()): AlertaJanela | undefined {
+  const ate = guiaEfetivo(v).guia.janelaAte;
+  if (ate === undefined) return undefined;
+  if (ano > ate) {
+    const n = ano - ate;
+    return { tipo: 'passou', texto: `Passou da janela há ${n} ${n === 1 ? 'ano' : 'anos'} (até ${ate})` };
+  }
+  if (ano === ate) return { tipo: 'breve', texto: `Último ano da janela (até ${ate})` };
+  if (ano === ate - 1) return { tipo: 'breve', texto: `A janela acaba em ${ate}` };
+  return undefined;
+}
