@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
-const VERSAO = '0.13'; // sobe à mão quando há novidades para o Tiago ver
+const VERSAO = '0.14'; // sobe à mão quando há novidades para o Tiago ver
 const COMMIT = (process.env.VERCEL_GIT_COMMIT_SHA ?? '').slice(0, 7);
 const DATA = new Date().toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', timeZone: 'Europe/Lisbon' });
 
