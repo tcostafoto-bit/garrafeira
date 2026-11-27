@@ -125,3 +125,8 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - Cada cartão da lista mostra o valor por garrafa e, com mais de uma, "cada · total". Cartão de resumo ganha "Valor por tipo" (garrafas e valor por tipo + total geral).
 - Abrir hoje: antes só mostrava 3 sugestões e as restantes nunca apareciam (ex.: CV Branco). Agora há "Mostrar todas" e só entram os vinhos cujo tipo ou pratos do guia combinam com a categoria. Novas ocasiões para bebidas sem janela: Digestivo, Brinde ou festa, Cerveja e convívio, Provar a solo; whisky/licor/cerveja/sidra/saquê também entram em pratos adequados.
 - Teste com 50 itens (65 garrafas) das fichas: todos aparecem em pelo menos uma ocasião.
+
+## Valores das 11 referências sem valor (2026-11-27)
+- Identificadas na base: Encostas do Côa Branco (x3), Marquês de Borba Colheita 2023, Mateus Sparkling Rosé, Mionetto Prestige, Graham's 10, Porto 20 Anos (DHL), Vasques de Carvalho LBV 2013, Alcunha 2020, Cedro do Noval 2021, Foral de Meda 2021, Grainha Reserva 2023.
+- Com preço lido: Marquês de Borba (5,49), Mateus (7,50), Mionetto (11,99 duty-free), Graham's 10 (23,95 £), Grainha (12,74 a 16,86), Cedro do Noval (30,10 em loja austríaca). Estimados sem preço lido: Encostas do Côa, Porto 20 Anos, Vasques LBV, Alcunha, Foral de Meda. Todos marcados como estimativa na nota da fonte.
+- Bloco em fichas/valores-11-sem-valor-2026-11-27.json.
