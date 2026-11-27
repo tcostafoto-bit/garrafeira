@@ -91,3 +91,9 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - **Herdade Aldeia de Cima Reserva:** duas colheitas, 2022 (cápsula salmão) e 2024 (cápsula verde). «2 caixas» lido como **2 garrafas de cada ano, 4 no total** (a caixa da foto leva 2 garrafas, uma de cada ano). O 2024 ficou como **branco** (um tinto Reserva de 2024 ainda não estaria à venda e a cápsula verde é a dos brancos); fica marcado «a confirmar» nas notas.
 - **Fotos do Tiago:** não as usei como foto do vinho, porque mostram a garrafa dentro de caixa de madeira, com película ou deitada, sem fundo limpo. Ficam com o rótulo desenhado (nome, produtor e ano reais). O Tiago pode juntar a foto dele na ficha (Editar → Foto) quando quiser.
 - Importação por blocos «GARRAFEIRA v1» entregues no chat; o CV 2019 é atualizado (não duplicado) porque coincide nome e ano. Fichas guardadas em `fichas/fichas-2026-11-27-*.json` na pasta do projeto.
+
+## Fotos de loja para os vinhos novos (27/11/2026, v0.11)
+- **Regra do Tiago:** para todos os vinhos novos vou sempre à net buscar a foto da garrafa e guardo só o endereço da imagem (da loja ou do produtor) em `src/lib/imagens.ts`; a app mostra-a a partir do site de origem. Se a imagem falhar, fica o rótulo desenhado.
+- **Juntei:** CV tinto 2019 (agora a foto do magnum), CV Branco, Poças Reserva, Aldeia de Cima Reserva 2022 e Palato do Côa. Duas são «imagem ilustrativa» do site (Poças e Aldeia de Cima) e a do Palato é de outra colheita (mesmo rótulo de gama); não consegui abrir as imagens daqui para as ver, por isso o Tiago deve avisar se alguma estiver errada.
+- **Sem foto:** Aldeia de Cima 2024 (branco), porque não encontrei imagem do mesmo vinho.
+- **Bloco único:** o Tiago pediu um só código com os 6 vinhos. Vai como `"acao":"atualizar"`: se o CV 2019 já existir, é atualizado (formato e valor, sem somar garrafas); se não existir, é criado com todos os dados; os restantes são criados. Testado nos dois casos.
