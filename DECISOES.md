@@ -84,3 +84,10 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - A pedido do Tiago, o **valor estimado aparece por defeito** na partilha (interruptor ligado; coluna `mostrar_precos` passa a `default true`). Pode desligar-se por ligação. O preço de compra continua a nunca sair, tal como notas, locais e as fotos do próprio Tiago.
 - A foto partilhada é a de loja ou, na falta dela, o rótulo desenhado na garrafa.
 - Os passos para o Tiago vão sempre escritos na conversa (com o SQL dentro da mensagem), não em ficheiros ou ligações.
+
+## Fotos novas e formatos (27/11/2026)
+- **Formatos (indicados pelo Tiago):** Palato do Côa 2022 e CV Curriculum Vitae 2019 tinto são magnum de 1,5 L; o CV Branco 2019 é garrafa normal de 75 cl; o Poças Reserva 2018 é de 5 L. O valor estimado é sempre por garrafa **do formato** (magnum e 5 L valem mais que 75 cl).
+- **Valores:** CV magnum 210 € (loja Garrafinhas, magnum de outra colheita, 209,85 €); CV Branco 70 € (lojas com 69,28 € e 74,85 €, outras colheitas); Palato magnum 22 € e Poças 5 L 150 € **calculados** a partir do preço de 75 cl (8,40 € e cerca de 14 €), porque não encontrei esses formatos à venda; Aldeia de Cima 14 € (13,49 €) e branco 15 € (estimativa sem fonte).
+- **Herdade Aldeia de Cima Reserva:** duas colheitas, 2022 (cápsula salmão) e 2024 (cápsula verde). «2 caixas» lido como **2 garrafas de cada ano, 4 no total** (a caixa da foto leva 2 garrafas, uma de cada ano). O 2024 ficou como **branco** (um tinto Reserva de 2024 ainda não estaria à venda e a cápsula verde é a dos brancos); fica marcado «a confirmar» nas notas.
+- **Fotos do Tiago:** não as usei como foto do vinho, porque mostram a garrafa dentro de caixa de madeira, com película ou deitada, sem fundo limpo. Ficam com o rótulo desenhado (nome, produtor e ano reais). O Tiago pode juntar a foto dele na ficha (Editar → Foto) quando quiser.
+- Importação por blocos «GARRAFEIRA v1» entregues no chat; o CV 2019 é atualizado (não duplicado) porque coincide nome e ano. Fichas guardadas em `fichas/fichas-2026-11-27-*.json` na pasta do projeto.
