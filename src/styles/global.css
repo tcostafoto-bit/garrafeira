@@ -412,10 +412,11 @@ textarea.bloco { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-si
 .mover button { width: 44px; height: 44px; border-radius: 12px; background: var(--superficie); border: 1px solid var(--linha); color: var(--dourado); font-size: 20px; }
 .mover button:disabled { opacity: 0.3; }
 
-/* Foto de loja: cartão branco que enche o espaço; o fundo branco da foto funde-se com ele */
-.foto-vinho.externa { background: #fff; }
-.foto-vinho.externa img { object-fit: cover; object-position: center; mix-blend-mode: multiply; }
-.foto-vinho.externa.retrato img { object-fit: contain; padding: 3px 0; }
-.ficha-heroi .foto-vinho.grande.externa { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: var(--sombra); max-width: 340px; margin: 0 auto; }
-.ficha-heroi .foto-vinho.grande.externa img { width: 100%; height: 100%; max-height: none; max-width: none; border-radius: 0; box-shadow: none; object-fit: cover; }
-.ficha-heroi .foto-vinho.grande.externa.retrato img { object-fit: contain; padding: 8px 0; }
+/* Foto de loja: cartão branco; a garrafa aparece sempre inteira (contain). Só as fotos bem largas, com muita margem
+   branca dos lados, enchem a altura e perdem as laterais (nunca cortam em cima nem em baixo). */
+.foto-vinho.externa { background: #fff; position: relative; }
+.foto-vinho.externa img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; mix-blend-mode: multiply; padding: 3px; }
+.foto-vinho.externa.larga img { object-fit: cover; padding: 0; }
+.ficha-heroi .foto-vinho.grande.externa { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: var(--sombra); max-width: 340px; height: 268px; margin: 0 auto; }
+.ficha-heroi .foto-vinho.grande.externa img { width: 100%; height: 100%; max-height: none; max-width: none; border-radius: 0; box-shadow: none; padding: 10px 0; }
+.ficha-heroi .foto-vinho.grande.externa.larga img { padding: 0; }

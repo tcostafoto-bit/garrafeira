@@ -66,3 +66,7 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 
 ## Enquadramento das fotos (27/11/2026)
 - Fotos de loja ficam num cartão **branco** que enche o espaço, com `mix-blend-mode: multiply`, para o fundo branco da foto se fundir com o cartão (sem caixa branca dentro de caixa creme). Fotos largas (1200×630) ampliam-se a toda a altura e cortam as laterais, para a garrafa aparecer grande; fotos altas mostram-se inteiras. Vale para a ficha, a lista, «Abrir hoje» e o Diário. Versão 0.7.
+
+## Enquadramento das fotos, correção (27/11/2026, v0.8)
+- A v0.7 ampliava fotos quase quadradas (Alcunha) e cortava a garrafa. Agora a foto **cabe sempre inteira** (contain, com margem de 10 px em cima e em baixo na ficha). Só fotos bem largas (largura maior que 1,5× a altura, como as de 1200×630) enchem a altura do cartão e perdem as laterais, que são só fundo branco; nunca se corta em cima nem em baixo.
+- Verificado por captura e medição de píxeis com cinco formas de imagem (quadrada, larga 1200×630, alta e estreita, quase quadrada, 4:5): a garrafa aparece inteira em todas. Foram imagens simuladas com as mesmas proporções, porque o ambiente de trabalho não consegue descarregar as fotos reais das lojas.

@@ -9,13 +9,13 @@ export const formaGarrafa = (t: TipoVinho) =>
 export function FotoVinho({ tipo, url, altura, className, rotulo, externa }:
   { tipo: TipoVinho; url?: string; altura: number; className?: string; rotulo?: Rotulo; externa?: boolean }) {
   const [falhou, setFalhou] = useState<string>();
-  const [retrato, setRetrato] = useState(false);
+  const [larga, setLarga] = useState(false);
   const mostrar = url && falhou !== url;
   return (
-    <div className={`foto-vinho ${className ?? ''}${mostrar && externa ? ` externa${retrato ? ' retrato' : ''}` : ''}`} style={{ ['--cor-tipo' as string]: `var(--${tipo})` }}>
+    <div className={`foto-vinho ${className ?? ''}${mostrar && externa ? ` externa${larga ? ' larga' : ''}` : ''}`} style={{ ['--cor-tipo' as string]: `var(--${tipo})` }}>
       {mostrar
         ? <img src={url} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setFalhou(url)}
-            onLoad={(e) => setRetrato(e.currentTarget.naturalHeight > e.currentTarget.naturalWidth * 1.15)} />
+            onLoad={(e) => setLarga(e.currentTarget.naturalWidth > e.currentTarget.naturalHeight * 1.5)} />
         : <GarrafaSilhueta tipo={tipo} altura={altura} forma={formaGarrafa(tipo)} rotulo={rotulo} />}
     </div>
   );
