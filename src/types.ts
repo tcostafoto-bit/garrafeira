@@ -1,18 +1,32 @@
+/** Tipos de vinho e de outras bebidas (o nome «TipoVinho» ficou por já estar em todo o código). */
 export type TipoVinho =
   | 'tinto' | 'branco' | 'rose' | 'espumante' | 'porto'
-  | 'madeira' | 'moscatel' | 'sobremesa' | 'outro';
+  | 'madeira' | 'moscatel' | 'sobremesa'
+  | 'whisky' | 'destilado' | 'licor' | 'cerveja' | 'sidra' | 'sake'
+  | 'outro';
 
-export const TIPOS: { id: TipoVinho; nome: string }[] = [
-  { id: 'tinto', nome: 'Tinto' },
-  { id: 'branco', nome: 'Branco' },
-  { id: 'rose', nome: 'Rosé' },
-  { id: 'espumante', nome: 'Espumante' },
-  { id: 'porto', nome: 'Porto' },
-  { id: 'madeira', nome: 'Madeira' },
-  { id: 'moscatel', nome: 'Moscatel' },
-  { id: 'sobremesa', nome: 'Sobremesa' },
-  { id: 'outro', nome: 'Outro' },
+export type GrupoTipo = 'vinho' | 'bebida';
+
+export const TIPOS: { id: TipoVinho; nome: string; grupo: GrupoTipo }[] = [
+  { id: 'tinto', nome: 'Tinto', grupo: 'vinho' },
+  { id: 'branco', nome: 'Branco', grupo: 'vinho' },
+  { id: 'rose', nome: 'Rosé', grupo: 'vinho' },
+  { id: 'espumante', nome: 'Espumante', grupo: 'vinho' },
+  { id: 'porto', nome: 'Porto', grupo: 'vinho' },
+  { id: 'madeira', nome: 'Madeira', grupo: 'vinho' },
+  { id: 'moscatel', nome: 'Moscatel', grupo: 'vinho' },
+  { id: 'sobremesa', nome: 'Sobremesa', grupo: 'vinho' },
+  { id: 'whisky', nome: 'Whisky', grupo: 'bebida' },
+  { id: 'destilado', nome: 'Destilado', grupo: 'bebida' },
+  { id: 'licor', nome: 'Licor', grupo: 'bebida' },
+  { id: 'cerveja', nome: 'Cerveja', grupo: 'bebida' },
+  { id: 'sidra', nome: 'Sidra', grupo: 'bebida' },
+  { id: 'sake', nome: 'Saquê', grupo: 'bebida' },
+  { id: 'outro', nome: 'Outro', grupo: 'bebida' },
 ];
+
+/** Vinho (tinto, branco, porto…) ou outra bebida (whisky, licor, cerveja…). */
+export const ehBebida = (t: TipoVinho) => TIPOS.find((x) => x.id === t)?.grupo === 'bebida';
 
 export type Nivel = 1 | 2 | 3 | 4 | 5;
 

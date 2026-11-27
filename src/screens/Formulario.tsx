@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Contador } from '../components/Contador';
 import { Icone } from '../components/Icone';
 import { GarrafaSilhueta } from '../components/GarrafaSilhueta';
@@ -6,10 +6,10 @@ import { formaGarrafa } from '../components/FotoVinho';
 import { prepararFoto } from '../lib/fotos';
 import type { DadosVinho } from '../lib/vinhos';
 import type { FotoNova } from '../hooks/useVinhos';
-import { TIPOS, type TipoVinho, type Vinho } from '../types';
+import { TIPOS, ehBebida, type TipoVinho, type Vinho } from '../types';
 
 const PASSOS = ['Rótulo', 'Origem', 'Na garrafeira'] as const;
-const VOLUMES = [375, 500, 750, 1500, 3000];
+const VOLUMES = [330, 375, 500, 700, 750, 1000, 1500, 3000];
 const ANO_ATUAL = new Date().getFullYear();
 
 const paraTexto = (n?: number) => (n === undefined ? '' : String(n).replace('.', ','));
@@ -176,7 +176,7 @@ export function Formulario({ inicial, fotoUrl, sugestoes, fechar, guardar }: {
               </div>
             )}
 
-            <Campo rotulo="Nome do vinho *">
+            <Campo rotulo={ehBebida(f.tipo) ? 'Nome da bebida *' : 'Nome do vinho *'}>
               <input value={f.nome} onChange={(e) => mudar('nome', e.target.value)} placeholder="ex.: Quinta do Vale Meão"
                 autoCapitalize="words" enterKeyHint="next" />
             </Campo>
@@ -184,7 +184,7 @@ export function Formulario({ inicial, fotoUrl, sugestoes, fechar, guardar }: {
               <input value={f.produtor} onChange={(e) => mudar('produtor', e.target.value)} list="l-produtores" autoCapitalize="words" />
             </Campo>
             <div className="campo">
-              <span>Ano da colheita</span>
+              <span>{ehBebida(f.tipo) ? 'Ano (se tiver)' : 'Ano da colheita'}</span>
               <div className="linha-campos">
                 <input value={f.nv ? '' : f.ano} disabled={f.nv} inputMode="numeric" maxLength={4} placeholder={f.nv ? 'Sem ano' : String(ANO_ATUAL - 4)}
                   onChange={(e) => mudar('ano', e.target.value.replace(/\D/g, ''))} />
@@ -196,11 +196,16 @@ export function Formulario({ inicial, fotoUrl, sugestoes, fechar, guardar }: {
             <div className="campo">
               <span>Tipo</span>
               <div className="chips-grelha">
-                {TIPOS.map((t) => (
-                  <button key={t.id} type="button" className={`chip${f.tipo === t.id ? ' ativo' : ''}`} onClick={() => mudar('tipo', t.id)}
-                    aria-pressed={f.tipo === t.id}>
-                    <span className="ponto" style={{ background: `var(--${t.id})` }} />{t.nome}
-                  </button>
+                {(['vinho', 'bebida'] as const).map((g) => (
+                  <Fragment key={g}>
+                    <span className="grupo-tipo">{g === 'vinho' ? 'Vinhos' : 'Outras bebidas'}</span>
+                    {TIPOS.filter((t) => t.grupo === g).map((t) => (
+                      <button key={t.id} type="button" className={`chip${f.tipo === t.id ? ' ativo' : ''}`} onClick={() => mudar('tipo', t.id)}
+                        aria-pressed={f.tipo === t.id}>
+                        <span className="ponto" style={{ background: `var(--${t.id})` }} />{t.nome}
+                      </button>
+                    ))}
+                  </Fragment>
                 ))}
               </div>
             </div>
@@ -216,9 +221,11 @@ export function Formulario({ inicial, fotoUrl, sugestoes, fechar, guardar }: {
             <Campo rotulo="Denominação">
               <input value={f.denominacao} onChange={(e) => mudar('denominacao', e.target.value)} placeholder="ex.: DOC Douro" />
             </Campo>
-            <Campo rotulo="Castas" ajuda="Separadas por vírgulas">
-              <input value={f.castas} onChange={(e) => mudar('castas', e.target.value)} placeholder="Touriga Nacional, Tinta Roriz" autoCapitalize="words" />
-            </Campo>
+            {!ehBebida(f.tipo) && (
+              <Campo rotulo="Castas" ajuda="Separadas por vírgulas">
+                <input value={f.castas} onChange={(e) => mudar('castas', e.target.value)} placeholder="Touriga Nacional, Tinta Roriz" autoCapitalize="words" />
+              </Campo>
+            )}
             <Campo rotulo="Teor alcoólico (%)">
               <input value={f.teorAlcool} onChange={(e) => mudar('teorAlcool', e.target.value)} inputMode="decimal" placeholder="13,5" />
             </Campo>

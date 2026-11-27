@@ -1,4 +1,4 @@
-import type { Vinho } from '../types';
+import { ehBebida, type Vinho } from '../types';
 import { guiaEfetivo } from './guia';
 
 export type EstadoJanela = 'jovem' | 'no-ponto' | 'a-passar';
@@ -8,7 +8,7 @@ export function estadoJanela(v: Vinho, ano = new Date().getFullYear()): EstadoJa
   const { guia: g } = guiaEfetivo(v);
   if (g.janelaDe === undefined && g.janelaAte === undefined) {
     // Sem janela (NV, tawny, Madeira…): conta como pronto a beber.
-    return v.tipo === 'outro' ? undefined : 'no-ponto';
+    return ehBebida(v.tipo) ? undefined : 'no-ponto';
   }
   if (g.janelaDe !== undefined && ano < g.janelaDe) return 'jovem';
   if (g.janelaAte !== undefined && ano > g.janelaAte) return 'a-passar';

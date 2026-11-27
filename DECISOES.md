@@ -106,3 +106,10 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - A «de whisky» do Tiago é o **Bowmore 30 anos, série Sea Dragon**, garrafa de cerâmica, 70 cl, 43 %, em caixa preta com cetim vermelho (edição dos anos 1990). Entra como tipo **«Outro»**, porque a app só tem tipos de vinho, com guia próprio (sem decantar, sem gelo, copo Glencairn).
 - **Valor 1.700 €** (entre 1.550 e 2.500 €): leilões de 70 cl/43 % acabados a 1.350 £ e 1.450 £ em 2024 (um com caixa) e 2.200 £ em 2021; uma loja pede 3.500 £ (preço pedido, não vendido). Convertido a cerca de 1,15 €/£. As ofertas de 75 cl ficaram de fora.
 - Foto: a de um leilão da mesma edição (cerâmica). Não consegui abri-la daqui.
+
+## v0.13 — Todas as bebidas (2026-11-27)
+- Novos tipos: whisky, destilado, licor, cerveja, sidra, saquê (além de "outro"), com cor, forma de garrafa própria, filtros e formulário agrupado (Vinhos / Outras bebidas). Castas escondidas e "Ano (se tiver)" para bebidas; volumes 330/700/1000 ml adicionados.
+- Guia de serviço por tipo (copo, temperatura, sem decantar); bebidas não têm janela de consumo nem contam em "prontos a beber".
+- Importação aceita sinónimos (cognac, gin, rum, beer, etc.).
+- Migração 003 (alarga a restrição do tipo; não apaga dados; idempotente; testada em Postgres local). Tem de ser corrida pelo Tiago no Supabase.
+- Bowmore 30 Anos Sea Dragon passa a tipo whisky.
