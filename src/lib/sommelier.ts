@@ -30,6 +30,14 @@ export const CATEGORIAS: Categoria[] = [
 
 const s = (x?: string) => (x ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
+/** Pequena variação que muda todos os dias, para que quem tem pontos parecidos vá rodando em vez de ganhar sempre o mesmo. */
+const rodizio = (id: string) => {
+  const dia = new Date().toISOString().slice(0, 10);
+  let h = 0;
+  for (const c of dia + id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return (h / 4294967296) * 1.5; // até 1,5 pontos de variação diária
+};
+
 export interface Sugestao { vinho: Vinho; pontos: number; razoes: string[] }
 
 export function sugerir(vinhos: Vinho[], categoria?: Categoria, texto = ''): Sugestao[] {
@@ -67,5 +75,5 @@ export function sugerir(vinhos: Vinho[], categoria?: Categoria, texto = ''): Sug
       return { vinho: v, pontos, razoes, ajusta: !cat || (cat.tipos[v.tipo] ?? 0) > 0 || melhor > 0 };
     })
     .filter((x) => x.pontos > 0 && x.ajusta)
-    .sort((a, b) => b.pontos - a.pontos || (a.vinho.valorEstimado ?? 0) - (b.vinho.valorEstimado ?? 0))
+    .sort((a, b) => (b.pontos + rodizio(b.vinho.id)) - (a.pontos + rodizio(a.vinho.id)))
 }
