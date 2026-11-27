@@ -4,7 +4,7 @@ import { Contador } from '../components/Contador';
 import { FotoVinho } from '../components/FotoVinho';
 import { Icone } from '../components/Icone';
 import { AbrirGarrafa, Estrelas } from '../components/AbrirGarrafa';
-import { formatarEuro, formatarTemperatura } from '../lib/formatos';
+import { formatarEuro, formatarMoeda, formatarTemperatura } from '../lib/formatos';
 import { estadoJanela, NOME_JANELA, noPico, textoJanela } from '../lib/janela';
 import { guiaEfetivo } from '../lib/guia';
 import { TIPOS, type Consumo, type Vinho } from '../types';
@@ -85,7 +85,7 @@ export function Ficha({ v, url, consumos, fechar, editar, mudarQuantidade, alter
           <section className="cartao valor">
             <div className="valor-topo">
               <div>
-                <div className="resumo-rotulo" style={{ marginTop: 0 }}>Valor estimado</div>
+                <div className="resumo-rotulo" style={{ marginTop: 0 }}>Valor estimado · por garrafa{v.volumeMl !== 750 ? ` de ${formatarVolume(v.volumeMl)}` : ''}</div>
                 <div className="num dourado" style={{ fontSize: 28, color: 'var(--dourado)' }}>
                   {v.valorEstimado !== undefined ? formatarEuro(v.valorEstimado) : '–'}
                 </div>
@@ -99,9 +99,12 @@ export function Ficha({ v, url, consumos, fechar, editar, mudarQuantidade, alter
             {v.valorFontes.length > 0 && (
               <ul className="fontes">
                 {v.valorFontes.map((f) => (
-                  <li key={f.url}>
-                    <a href={f.url} target="_blank" rel="noopener noreferrer">{f.titulo}</a>
-                    {f.preco !== undefined && <span className="num">{formatarEuro(f.preco)}</span>}
+                  <li key={f.url + f.titulo}>
+                    <span style={{ minWidth: 0 }}>
+                      <a href={f.url} target="_blank" rel="noopener noreferrer">{f.titulo}</a>
+                      {f.nota && <span className="fonte-nota">{f.nota}</span>}
+                    </span>
+                    {f.preco !== undefined && <span className="num">{formatarMoeda(f.preco, f.moeda)}</span>}
                   </li>
                 ))}
               </ul>

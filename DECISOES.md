@@ -33,3 +33,12 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 
 ## Publicação
 - Um só pull request com as fases 1 a 4, testado no tamanho do iPhone, e merge para a `main` (o Vercel publica sozinho). É reversível com um revert.
+
+## Revisão de preços (27/11/2026)
+- **Estimativa:** manda o preço de uma garrafa, da mesma colheita, numa loja portuguesa com IVA. Lojas estrangeiras ficam como fonte, na moeda delas (€, £, US$), com uma nota.
+- **«In bond»** (sem IVA, direitos nem portes) é assinalado na nota; a estimativa já conta com o IVA (La Chapelle 2016: 74 € in bond, cerca de 91 € com IVA, estimativa 90 €).
+- **Preços de caixa ou de conjunto** deixam de aparecer como preço de garrafa.
+- **Fontes de outra colheita ou esgotadas** saem do valor ou ficam com nota.
+- **Vale Meão 2018:** retirada a ligação da Gloria Wines; ficam Garrafeira Soares e Hedonism (esgotado, sem IVA). Estimativa 230 €.
+- **Ramos Pinto Cota Seiscentos / Duzentos:** os 145 € eram de um conjunto de 3; a estimativa de 60 € é minha, sem fonte de garrafa solta.
+- **Aplicar:** ficheiro `correcoes-precos-2026-11-27.md` (14 vinhos, `atualizar`). Valores a `null` limpam mínimos e máximos antigos.

@@ -9,7 +9,7 @@
  * "acao" pode ser "criar" (por omissão) ou "atualizar" (com "id" de um vinho que já existe).
  */
 import type { DadosVinho } from './vinhos';
-import { TIPOS, type GuiaVinho, type Nivel, type TipoVinho, type Vinho } from '../types';
+import { TIPOS, type FonteValor, type GuiaVinho, type Nivel, type TipoVinho, type Vinho } from '../types';
 
 export const CABECALHO = 'GARRAFEIRA v1';
 
@@ -21,6 +21,8 @@ export interface ItemImportado {
   acao: 'criar' | 'atualizar';
   existente?: Vinho;
   avisos: string[];
+  /** Campos de valor que o bloco manda explicitamente limpar (null), para apagar preços antigos. */
+  limpar: ('valorMin' | 'valorMax' | 'valorEstimado')[];
 }
 
 export interface ResultadoLeitura { itens: ItemImportado[]; erros: string[] }
@@ -77,7 +79,7 @@ export function lerBloco(texto: string, atuais: Vinho[]): ResultadoLeitura {
         || porChave.get(chaveVinho(r.campos.nome!, r.campos.ano));
       const acao = acaoBloco === 'atualizar' && existente ? 'atualizar' : 'criar';
       if (acaoBloco === 'atualizar' && !existente) r.avisos.push('Não encontrei este vinho na garrafeira: vai ser criado.');
-      itens.push({ campos: r.campos, acao, existente: existente || undefined, avisos: r.avisos });
+      itens.push({ campos: r.campos, acao, existente: existente || undefined, avisos: r.avisos, limpar: r.limpar });
     });
   });
   if (!itens.length && !erros.length) erros.push('Não encontrei nenhum vinho. Cola o bloco GARRAFEIRA v1 que o Claude te deu.');
@@ -172,7 +174,7 @@ function guia(v: unknown): GuiaVinho | undefined {
   return r;
 }
 
-function normalizar(bruto: unknown): { campos: Partial<DadosVinho>; avisos: string[] } | null {
+function normalizar(bruto: unknown): { campos: Partial<DadosVinho>; avisos: string[]; limpar: ItemImportado['limpar'] } | null {
   if (!bruto || typeof bruto !== 'object') return null;
   const o = bruto as Record<string, unknown>;
   const nome = texto(o.nome);
@@ -201,7 +203,14 @@ function normalizar(bruto: unknown): { campos: Partial<DadosVinho>; avisos: stri
     valorMax: numero(o.valorMax),
     valorFontes: Array.isArray(o.valorFontes)
       ? o.valorFontes.filter((f) => f && typeof f === 'object' && (f as Record<string, unknown>).url)
-        .map((f) => { const x = f as Record<string, unknown>; return { titulo: texto(x.titulo) ?? String(x.url), url: String(x.url), preco: numero(x.preco) }; })
+        .map((f) => {
+          const x = f as Record<string, unknown>;
+          const m = String(x.moeda ?? 'EUR').toUpperCase();
+          return {
+            titulo: texto(x.titulo) ?? String(x.url), url: String(x.url), preco: numero(x.preco),
+            moeda: m === 'GBP' || m === 'USD' ? m : undefined, nota: texto(x.nota),
+          } satisfies FonteValor;
+        })
       : undefined,
     valorAtualizadoEm: data(o.valorAtualizadoEm),
     guia: guia(o.guia),
@@ -213,7 +222,8 @@ function normalizar(bruto: unknown): { campos: Partial<DadosVinho>; avisos: stri
   if (o.guia && !c.guia) avisos.push('O guia veio incompleto e foi ignorado.');
   if (c.castas && !c.castas.length) delete c.castas;
   Object.keys(c).forEach((k) => (c as Record<string, unknown>)[k] === undefined && delete (c as Record<string, unknown>)[k]);
-  return { campos: c, avisos };
+  const limpar = (['valorMin', 'valorMax', 'valorEstimado'] as const).filter((k) => o[k] === null);
+  return { campos: c, avisos, limpar };
 }
 
 // ───────────── Aplicar ─────────────
@@ -243,13 +253,15 @@ export function aplicar(item: ItemImportado, escolha: Escolha): DadosVinho | nul
     return { ...base, ...preenchido, quantidade: base.quantidade + (c.quantidade ?? 1) };
   }
   // substituir: os dados do Claude ganham; ficam a foto, os favoritos e a localização se o bloco não trouxer.
-  return {
+  const r: DadosVinho = {
     ...base, ...c,
     id: e.id, fotoPath: e.fotoPath,
     favorito: c.favorito ?? e.favorito,
     tags: c.tags ?? e.tags,
     quantidade: c.quantidade ?? e.quantidade,
   };
+  item.limpar.forEach((k) => delete r[k]);
+  return r;
 }
 
 // ───────────── Copiar inventário para o Claude ─────────────
