@@ -63,3 +63,6 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 
 ## Número da versão (27/11/2026)
 - O «versão 0.5» das Definições estava escrito à mão e ficou parado. Passa a **0.6** e mostra também a data e o código da versão publicada (o do Vercel), para o Tiago confirmar que tem a última. O número sobe à mão em `vite.config.ts` quando há novidades; a data e o código mudam sozinhos em cada publicação.
+
+## Enquadramento das fotos (27/11/2026)
+- Fotos de loja ficam num cartão **branco** que enche o espaço, com `mix-blend-mode: multiply`, para o fundo branco da foto se fundir com o cartão (sem caixa branca dentro de caixa creme). Fotos largas (1200×630) ampliam-se a toda a altura e cortam as laterais, para a garrafa aparecer grande; fotos altas mostram-se inteiras. Vale para a ficha, a lista, «Abrir hoje» e o Diário. Versão 0.7.

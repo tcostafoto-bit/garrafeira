@@ -412,8 +412,10 @@ textarea.bloco { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-si
 .mover button { width: 44px; height: 44px; border-radius: 12px; background: var(--superficie); border: 1px solid var(--linha); color: var(--dourado); font-size: 20px; }
 .mover button:disabled { opacity: 0.3; }
 
-/* Foto de loja: fundo claro e imagem inteira, sem cortar */
-.foto-vinho.externa { background: #f3eee6; }
-.foto-vinho.externa img { object-fit: contain; padding: 4px; }
-.foto-vinho.grande.externa { background: none; }
-.ficha-heroi .foto-vinho.grande.externa img { background: #f3eee6; padding: 12px 28px; border-radius: 16px; }
+/* Foto de loja: cartão branco que enche o espaço; o fundo branco da foto funde-se com ele */
+.foto-vinho.externa { background: #fff; }
+.foto-vinho.externa img { object-fit: cover; object-position: center; mix-blend-mode: multiply; }
+.foto-vinho.externa.retrato img { object-fit: contain; padding: 3px 0; }
+.ficha-heroi .foto-vinho.grande.externa { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: var(--sombra); max-width: 340px; margin: 0 auto; }
+.ficha-heroi .foto-vinho.grande.externa img { width: 100%; height: 100%; max-height: none; max-width: none; border-radius: 0; box-shadow: none; object-fit: cover; }
+.ficha-heroi .foto-vinho.grande.externa.retrato img { object-fit: contain; padding: 8px 0; }
