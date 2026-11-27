@@ -13,6 +13,8 @@ const LISTA: [string, number | undefined, string][] = [
   ["CV Curriculum Vitae Branco", 2019, "https://media.radar.wine/media/wines/e923197d-99e0-41dc-a581-75d0217f895f.png"],
   ["Poças Reserva", 2018, "https://media.radar.wine/media/wines/00aef554-99ad-43a5-a32b-ed1cdee51cfb.jpg"],
   ["Herdade Aldeia de Cima Reserva", 2022, "https://media.radar.wine/media/wines/8099dec9-bb1d-4e4c-9cb8-1cf984433f34.jpg"],
+  ["Herdade Aldeia de Cima Reserva", 2024, "https://media.radar.wine/media/wines/8099dec9-bb1d-4e4c-9cb8-1cf984433f34.jpg"],
+  ["Bowmore 30 Anos Sea Dragon", undefined, "https://media.whisky.auction/600/106117_0.jpg?id=230985"],
   ["Palato do Côa", 2022, "https://winehouseportugal.com/14316-large_default/palato-do-coa-2019-red-wine.jpg"],
   ["Quinta do Noval Touriga Nacional", 2020, "https://www.garrafeiranacional.com/media/catalog/product/cache/fb03a175f41adaae5cd7bd727048b47c/6/0/6063588-0.jpg"],
   ["Quinta do Noval Reserva", 2020, "https://winehouseportugal.com/14810-large_default/quinta-do-noval-reserva-2017-red-wine-in-the-90s-one-hundred-hectares-of-quinta-do-noval-were-replanted-adapting-the-pruning-met.jpg"],
