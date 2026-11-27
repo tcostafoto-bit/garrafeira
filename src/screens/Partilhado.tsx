@@ -22,7 +22,8 @@ export function Partilhado({ token }: { token: string }) {
   const [regiao, setRegiao] = useState('');
   const [decada, setDecada] = useState('');
   const [casta, setCasta] = useState('');
-  const [ordem, setOrdem] = useState<'nome' | 'ano' | 'valor'>('nome');
+  const [ordem, setOrdem] = useState<'nome' | 'ano' | 'valor' | 'pontuados'>('nome');
+  const [minimo, setMinimo] = useState(0);
   const [folha, setFolha] = useState(false);
 
   useEffect(() => {
@@ -39,21 +40,23 @@ export function Partilhado({ token }: { token: string }) {
   const regioes = unicos((v) => (!pais || v.pais === pais ? [v.regiao] : []));
   const decadas = unicos((v) => [decadaDe(v)]).reverse();
   const castas = unicos((v) => v.castas);
-  const nFiltros = [pais, regiao, decada, casta].filter(Boolean).length;
-  const limpar = () => { setTipo(''); setPais(''); setRegiao(''); setDecada(''); setCasta(''); setTexto(''); };
+  const nFiltros = [pais, regiao, decada, casta].filter(Boolean).length + (minimo ? 1 : 0);
+  const haNotas = todos.some((v) => v.criticas?.pontuacao !== undefined);
+  const limpar = () => { setTipo(''); setPais(''); setRegiao(''); setDecada(''); setCasta(''); setTexto(''); setMinimo(0); };
 
   const vinhos = useMemo(() => {
     const q = semAcentos(texto.trim());
     const lista = todos.filter((v) =>
       (!tipo || v.tipo === tipo) && (!pais || v.pais === pais) && (!regiao || v.regiao === regiao) &&
-      (!decada || decadaDe(v) === decada) && (!casta || v.castas.includes(casta)) &&
+      (!minimo || (v.criticas?.pontuacao ?? 0) >= minimo) && (!decada || decadaDe(v) === decada) && (!casta || v.castas.includes(casta)) &&
       (!q || q.split(/\s+/).every((p) =>
         semAcentos([v.nome, v.produtor, v.regiao, v.pais, v.ano ?? 'nv', TIPOS.find((t) => t.id === v.tipo)?.nome, ...v.castas].filter(Boolean).join(' ')).includes(p))));
     const cmp = ordem === 'ano' ? (a: Vinho, b: Vinho) => (b.ano ?? 0) - (a.ano ?? 0)
+      : ordem === 'pontuados' ? (a: Vinho, b: Vinho) => (b.criticas?.pontuacao ?? -1) - (a.criticas?.pontuacao ?? -1)
       : ordem === 'valor' ? (a: Vinho, b: Vinho) => (b.valorEstimado ?? 0) - (a.valorEstimado ?? 0)
       : (a: Vinho, b: Vinho) => a.nome.localeCompare(b.nome, 'pt');
     return [...lista].sort((a, b) => cmp(a, b) || a.nome.localeCompare(b.nome, 'pt'));
-  }, [todos, texto, tipo, pais, regiao, decada, casta, ordem]);
+  }, [todos, texto, tipo, pais, regiao, decada, casta, ordem, minimo]);
 
   if (dados === 'a-carregar') return <main className="ecra"><div className="lista">{[0, 1, 2].map((i) => <div key={i} className="linha-vinho esqueleto" />)}</div></main>;
   if (dados === 'erro') return <Aviso titulo="Não consegui abrir" texto="Confirma a ligação à internet e tenta outra vez." />;
@@ -103,9 +106,10 @@ export function Partilhado({ token }: { token: string }) {
         <label className="ordenar">
           <Icone nome="ordenar" tamanho={16} />
           <span className="sr-only">Ordenar por</span>
-          <select value={ordem} onChange={(e) => setOrdem(e.target.value as 'nome' | 'ano' | 'valor')}>
+          <select value={ordem} onChange={(e) => setOrdem(e.target.value as 'nome' | 'ano' | 'valor' | 'pontuados')}>
             <option value="nome">Nome</option>
             <option value="ano">Ano</option>
+            {haNotas && <option value="pontuados">Mais pontuados</option>}
             {dados.mostrarPrecos && <option value="valor">Valor</option>}
           </select>
         </label>
@@ -122,6 +126,7 @@ export function Partilhado({ token }: { token: string }) {
                 <span className="linha-vinho-texto">
                   <span className="linha-vinho-nome">{v.nome}</span>
                   <span className="linha-vinho-sub">{[v.produtor, v.ano ?? 'NV'].filter(Boolean).join(' · ')}</span>
+ {v.criticas?.pontuacao !== undefined && <span className="linha-vinho-pontos num">★ {v.criticas.pontuacao} pts</span>}
                   <span className="linha-vinho-sub fraco">
                     <span className="ponto" style={{ background: `var(--${v.tipo})` }} /> {[TIPOS.find((t) => t.id === v.tipo)?.nome, v.regiao].filter(Boolean).join(' · ')}
                   </span>
@@ -140,6 +145,7 @@ export function Partilhado({ token }: { token: string }) {
         <Grupo titulo="País" opcoes={paises} valor={pais} mudar={(v) => { setPais(v); setRegiao(''); }} />
         <Grupo titulo="Região" opcoes={regioes} valor={regiao} mudar={setRegiao} />
         <Grupo titulo="Ano" opcoes={decadas} valor={decada} mudar={setDecada} />
+        {haNotas && <Grupo titulo="Pontuação mínima" opcoes={['90', '92', '94']} valor={minimo ? String(minimo) : ''} mudar={(v) => setMinimo(Number(v) || 0)} />}
         <Grupo titulo="Casta" opcoes={castas} valor={casta} mudar={setCasta} />
         <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
           <button className="botao secundario" onClick={limpar}>Limpar</button>

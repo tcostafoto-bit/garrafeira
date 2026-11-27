@@ -48,6 +48,32 @@ export interface GuiaVinho {
 }
 
 /** Uma loja ou site onde se viu o preço. A moeda é EUR se não vier indicada. */
+export interface FonteCritica {
+  /** Ex.: "Wine Advocate", "Vivino", "Revista de Vinhos". */
+  fonte: string;
+  pontos?: number;
+  /** Escala da nota original: 100, 20 ou 5 (Vivino). */
+  escala?: 100 | 20 | 5;
+  url?: string;
+  colheita?: number;
+  /** A nota é de outra colheita do mesmo vinho. */
+  outraColheita?: boolean;
+  nota?: string;
+}
+
+export interface Criticas {
+  /** Pontuação agregada, 0 a 100. */
+  pontuacao?: number;
+  fontes: FonteCritica[];
+  /** O que a crítica diz, em poucas linhas. */
+  resumo?: string;
+  atualizadoEm?: string;
+}
+
+/** Nota numa escala de 0 a 100. */
+export const pontos100 = (f: FonteCritica): number | undefined =>
+  f.pontos === undefined ? undefined : Math.round(f.pontos * (f.escala === 20 ? 5 : f.escala === 5 ? 20 : 1));
+
 export interface FonteValor {
   titulo: string;
   url: string;
@@ -85,6 +111,8 @@ export interface Vinho {
 
   guia?: GuiaVinho;
   guiaOrigem?: 'regras' | 'claude';
+
+  criticas?: Criticas;
 
   fotoPath?: string;
   favorito: boolean;

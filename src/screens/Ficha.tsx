@@ -7,6 +7,7 @@ import { AbrirGarrafa, Estrelas } from '../components/AbrirGarrafa';
 import { formatarEuro, formatarMoeda, formatarTemperatura } from '../lib/formatos';
 import { estadoJanela, NOME_JANELA, noPico, textoJanela } from '../lib/janela';
 import { guiaEfetivo } from '../lib/guia';
+import { CriticasVinho } from '../components/Criticas';
 import { PartilharFolha } from '../components/PartilharFolha';
 import { TIPOS, type Consumo, type Vinho } from '../types';
 
@@ -122,6 +123,8 @@ export function Ficha({ v, foto, consumos = [], fechar, editar = nada, mudarQuan
             {v.valorAtualizadoEm && <div className="nota-grupo" style={{ margin: '10px 0 0' }}>Pesquisado em {formatarData(v.valorAtualizadoEm)}</div>}
           </section>
         )}
+
+        {v.criticas && <CriticasVinho c={v.criticas} />}
 
         <section className="grupo">
           <h3 className="grupo-titulo">Como servir</h3>
