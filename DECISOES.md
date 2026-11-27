@@ -130,3 +130,6 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 - Identificadas na base: Encostas do Côa Branco (x3), Marquês de Borba Colheita 2023, Mateus Sparkling Rosé, Mionetto Prestige, Graham's 10, Porto 20 Anos (DHL), Vasques de Carvalho LBV 2013, Alcunha 2020, Cedro do Noval 2021, Foral de Meda 2021, Grainha Reserva 2023.
 - Com preço lido: Marquês de Borba (5,49), Mateus (7,50), Mionetto (11,99 duty-free), Graham's 10 (23,95 £), Grainha (12,74 a 16,86), Cedro do Noval (30,10 em loja austríaca). Estimados sem preço lido: Encostas do Côa, Porto 20 Anos, Vasques LBV, Alcunha, Foral de Meda. Todos marcados como estimativa na nota da fonte.
 - Bloco em fichas/valores-11-sem-valor-2026-11-27.json.
+
+## v0.16 — Abrir hoje: o CV Branco aparecia sempre em último (2026-11-27)
+- Causa: com pontos iguais, o desempate punha primeiro o vinho mais barato; o CV Branco (70 €) perdia sempre e só se via em "Mostrar todas". Agora há uma variação diária (até 1,5 pontos) para os vinhos parecidos irem rodando, e mostram-se 5 sugestões em vez de 3. Hoje o CV Branco é a 1.ª sugestão em Peixe.

@@ -13,7 +13,7 @@ export function AbrirHoje({ inv, abrir }: { inv: Inventario; abrir: (id: string)
   const pediu = !!cat || texto.trim().length > 2;
   const [todas, setTodas] = useState(false);
   const todasSug = useMemo(() => (pediu ? sugerir(inv.vinhos, cat, texto) : []), [inv.vinhos, cat, texto, pediu]);
-  const sugestoes = todas ? todasSug : todasSug.slice(0, 3);
+  const sugestoes = todas ? todasSug : todasSug.slice(0, 5);
 
   return (
     <main className="ecra">
@@ -72,9 +72,9 @@ export function AbrirHoje({ inv, abrir }: { inv: Inventario; abrir: (id: string)
               })}
             </ol>
           )}
-          {todasSug.length > 3 && (
+          {todasSug.length > 5 && (
             <button className="ligacao" style={{ marginTop: 14 }} onClick={() => setTodas(!todas)}>
-              {todas ? 'Mostrar só as 3 melhores' : `Mostrar todas (${todasSug.length})`}
+              {todas ? 'Mostrar só as 5 melhores' : `Mostrar todas (${todasSug.length})`}
             </button>
           )}
         </section>
