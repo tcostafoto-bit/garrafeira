@@ -33,6 +33,16 @@ export interface GuiaVinho {
   notasProva?: string;
 }
 
+/** Uma loja ou site onde se viu o preço. A moeda é EUR se não vier indicada. */
+export interface FonteValor {
+  titulo: string;
+  url: string;
+  preco?: number;
+  moeda?: 'EUR' | 'GBP' | 'USD';
+  /** Ex.: "sem IVA (in bond)", "colheita 2020", "esgotado". */
+  nota?: string;
+}
+
 export interface Vinho {
   id: string;
   nome: string;
@@ -56,7 +66,7 @@ export interface Vinho {
   valorEstimado?: number;
   valorMin?: number;
   valorMax?: number;
-  valorFontes: { titulo: string; url: string; preco?: number }[];
+  valorFontes: FonteValor[];
   valorAtualizadoEm?: string;
 
   guia?: GuiaVinho;
