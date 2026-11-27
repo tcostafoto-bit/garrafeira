@@ -10,7 +10,7 @@ import { TIPOS, type TipoVinho, type Vinho } from '../types';
 import type { Inventario } from '../hooks/useVinhos';
 
 type Filtro = 'todos' | TipoVinho | 'pronto' | 'atencao' | 'favoritos' | 'acabados';
-type Ordem = 'minha' | 'nome' | 'ano' | 'valor' | 'recentes';
+type Ordem = 'minha' | 'nome' | 'ano' | 'valor' | 'recentes' | 'pontuados';
 
 const ORDENS: { id: Ordem; nome: string }[] = [
   { id: 'minha', nome: 'A minha ordem' },
@@ -18,6 +18,7 @@ const ORDENS: { id: Ordem; nome: string }[] = [
   { id: 'ano', nome: 'Ano' },
   { id: 'valor', nome: 'Valor' },
   { id: 'recentes', nome: 'Recentes' },
+  { id: 'pontuados', nome: 'Mais pontuados' },
 ];
 
 /** Valor de uma garrafa: o estimado, ou o preço de compra se ainda não houver estimativa. */
@@ -38,6 +39,7 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
   { inv: Inventario; adicionar: () => void; abrir: (id: string) => void; carregarExemplos: () => void }) {
   const { vinhos, urls, estado } = inv;
   const [texto, setTexto] = useState('');
+  const [minimo, setMinimo] = useState(0);
   const [filtro, setFiltro] = useState<Filtro>('todos');
   const [ordem, setOrdemEstado] = useState<Ordem>(() => {
     const o = lerLS<string>(CHAVE_MODO, 'nome');
@@ -85,6 +87,7 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
       if (filtroAtivo !== 'todos') return v.tipo === filtroAtivo;
       return true;
     });
+    if (minimo) r = r.filter((v) => (v.criticas?.pontuacao ?? 0) >= minimo);
     if (q) {
       const palavras = q.split(/\s+/);
       r = r.filter((v) => {
@@ -100,9 +103,10 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
       ano: (a, b) => (a.ano ?? 9999) - (b.ano ?? 9999) || a.nome.localeCompare(b.nome, 'pt'),
       valor: (a, b) => valorGarrafa(b) - valorGarrafa(a),
       recentes: (a, b) => (b.criadoEm ?? '').localeCompare(a.criadoEm ?? ''),
+      pontuados: (a, b) => (b.criticas?.pontuacao ?? -1) - (a.criticas?.pontuacao ?? -1) || a.nome.localeCompare(b.nome, 'pt'),
     };
     return [...r].sort(cmp[ordem]);
-  }, [vinhos, texto, filtroAtivo, ordem, minhaOrdem]);
+  }, [vinhos, texto, filtroAtivo, ordem, minhaOrdem, minimo]);
 
   /** Troca o vinho com o vizinho visível (para cima ou para baixo) e guarda a ordem neste telemóvel. */
   const mover = (id: string, passo: -1 | 1) => {
@@ -215,6 +219,15 @@ export function Garrafeira({ inv, adicionar, abrir, carregarExemplos }:
             ))}
           </div>
 
+          {vinhos.some((v) => v.criticas?.pontuacao !== undefined) && (
+            <div className="chips" aria-label="Pontuação mínima" style={{ marginTop: 10 }}>
+              <span className="chip-rotulo">Pontuação</span>
+              {[90, 92, 94].map((m) => (
+                <button key={m} className={`chip${minimo === m ? ' ativo' : ''}`} aria-pressed={minimo === m} onClick={() => setMinimo(minimo === m ? 0 : m)}>{m}+</button>
+              ))}
+            </div>
+          )}
+
           <div className="lista-topo">
             <span>{lista.length} {lista.length === 1 ? 'item' : 'itens'}
               {ordem === 'minha' && (
@@ -295,6 +308,7 @@ function LinhaVinho({ v, urls, abrir, mover, primeiro, ultimo }:
             <span className="ponto" style={{ background: `var(--${v.tipo})` }} /> {linha3}
           </span>
           {linhaValor && <span className="linha-vinho-valor num">{linhaValor}</span>}
+          {v.criticas?.pontuacao !== undefined && <span className="linha-vinho-pontos num">★ {v.criticas.pontuacao} pts</span>}
           {alerta && <span className="linha-vinho-alerta" style={{ color: alerta.tipo === 'passou' ? 'var(--a-passar)' : 'var(--dourado)' }}>{alerta.texto}</span>}
         </span>
         <span className="linha-vinho-lado">

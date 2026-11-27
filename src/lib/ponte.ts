@@ -9,7 +9,7 @@
  * "acao" pode ser "criar" (por omissão) ou "atualizar" (com "id" de um vinho que já existe).
  */
 import type { DadosVinho } from './vinhos';
-import { TIPOS, type FonteValor, type GuiaVinho, type Nivel, type TipoVinho, type Vinho } from '../types';
+import { TIPOS, type Criticas, type FonteCritica, type FonteValor, type GuiaVinho, type Nivel, type TipoVinho, type Vinho } from '../types';
 
 export const CABECALHO = 'GARRAFEIRA v1';
 
@@ -221,6 +221,7 @@ function normalizar(bruto: unknown): { campos: Partial<DadosVinho>; avisos: stri
       : undefined,
     valorAtualizadoEm: data(o.valorAtualizadoEm),
     guia: guia(o.guia),
+    criticas: criticas(o.criticas),
     favorito: typeof o.favorito === 'boolean' ? o.favorito : undefined,
     notas: texto(o.notas),
     tags: listaTexto(o.tags),
@@ -236,6 +237,25 @@ function normalizar(bruto: unknown): { campos: Partial<DadosVinho>; avisos: stri
 // ───────────── Aplicar ─────────────
 
 /** Junta o item importado com o vinho existente, conforme a escolha. Devolve null se for para ignorar. */
+function criticas(x: unknown): Criticas | undefined {
+  if (!x || typeof x !== 'object') return undefined;
+  const o = x as Record<string, unknown>;
+  const fontes = (Array.isArray(o.fontes) ? o.fontes : [])
+    .filter((f) => f && typeof f === 'object' && (f as Record<string, unknown>).fonte)
+    .map((f) => {
+      const y = f as Record<string, unknown>;
+      const esc = numero(y.escala);
+      return {
+        fonte: String(y.fonte), pontos: numero(y.pontos), escala: esc === 20 || esc === 5 ? esc : 100,
+        url: texto(y.url), colheita: numero(y.colheita), outraColheita: y.outraColheita === true ? true : undefined, nota: texto(y.nota),
+      } satisfies FonteCritica;
+    });
+  const pontuacao = numero(o.pontuacao);
+  const resumo = texto(o.resumo);
+  if (!fontes.length && pontuacao === undefined && !resumo) return undefined;
+  return { pontuacao: pontuacao !== undefined ? Math.max(0, Math.min(100, Math.round(pontuacao))) : undefined, fontes, resumo, atualizadoEm: data(o.atualizadoEm) };
+}
+
 export function aplicar(item: ItemImportado, escolha: Escolha): DadosVinho | null {
   if (escolha === 'ignorar') return null;
   const c = item.campos;

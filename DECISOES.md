@@ -133,3 +133,9 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 
 ## v0.16 — Abrir hoje: o CV Branco aparecia sempre em último (2026-11-27)
 - Causa: com pontos iguais, o desempate punha primeiro o vinho mais barato; o CV Branco (70 €) perdia sempre e só se via em "Mostrar todas". Agora há uma variação diária (até 1,5 pontos) para os vinhos parecidos irem rodando, e mostram-se 5 sugestões em vez de 3. Hoje o CV Branco é a 1.ª sugestão em Peixe.
+
+## v0.17 — Notas da crítica por vinho (2026-11-27)
+- Novo campo `criticas` (jsonb, migração 004, só acrescenta): pontuação agregada 0–100, lista de fontes (nota, escala 100/20/5, link, colheita, "outra colheita"), resumo e data da pesquisa. Ficha mostra o cartão "Crítica"; lista tem ordem "Mais pontuados", filtro 90+/92+/94+ e selo "★ N pts"; a página partilhada tem o mesmo filtro e ordem (só leitura, a função ver_partilha passa a devolver `criticas`).
+- Regra do agregado: média arredondada das notas numéricas da mesma colheita (intervalos pelo ponto médio). Notas de outras colheitas, de comunidade (Vivino) ou de identidade não confirmada NÃO entram; ficam marcadas ou excluídas. Nada inventado.
+- Lote 1: 22 bebidas com dados (20 com agregado). Excluídos por identidade não confirmada: DoDa 2007, Vasques de Carvalho Vintage 2013, Freixenet Gran Cuvée. Muitas fontes pagas (Suckling, Jancis, Decanter, Wine Spectator) sem nota visível: não usadas.
+- Dados em fichas/criticas-lote1-2026-11-27.json. SQL 004 corrido por mim no Supabase.
