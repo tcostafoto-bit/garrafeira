@@ -70,3 +70,12 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 ## Enquadramento das fotos, correção (27/11/2026, v0.8)
 - A v0.7 ampliava fotos quase quadradas (Alcunha) e cortava a garrafa. Agora a foto **cabe sempre inteira** (contain, com margem de 10 px em cima e em baixo na ficha). Só fotos bem largas (largura maior que 1,5× a altura, como as de 1200×630) enchem a altura do cartão e perdem as laterais, que são só fundo branco; nunca se corta em cima nem em baixo.
 - Verificado por captura e medição de píxeis com cinco formas de imagem (quadrada, larga 1200×630, alta e estreita, quase quadrada, 4:5): a garrafa aparece inteira em todas. Foram imagens simuladas com as mesmas proporções, porque o ambiente de trabalho não consegue descarregar as fotos reais das lojas.
+
+## Partilhar com amigos, só para ver (27/11/2026, v0.9)
+- **Ligação secreta e revogável:** `…/#/v/<código>`, com 64 caracteres aleatórios (impossível de adivinhar). Há uma ligação por vinho (botão de partilhar na ficha) e uma para a garrafeira toda (Definições → Amigos). Quem a abre não precisa de conta. A página tem `noindex`.
+- **O que se vê:** nome, produtor, ano, tipo, país, região, castas, álcool, volume, janela de consumo e dicas de servir. A foto é a de loja ou o rótulo desenhado. **Preços desligados por defeito**; há um interruptor «Mostrar o valor estimado».
+- **O que nunca sai:** preço de compra, local, notas, as tuas fotos, favoritos, etiquetas, quantidades, Diário e fontes de preço. Na garrafeira inteira só entram vinhos com garrafas em stock.
+- **Segurança:** os amigos nunca leem as tabelas; só chamam a função `ver_partilha(código)`, que devolve uma lista fixa de campos. Só o dono cria, altera e apaga ligações (RLS). «Parar de partilhar» apaga a ligação e deixa logo de funcionar; «Criar ligação nova» troca o código. Testei o SQL numa base Postgres local, incluindo as regras de privacidade.
+- **A fazer pelo Tiago (uma vez):** correr `002_partilhas.sql` no SQL Editor do Supabase. Sem isso a app avisa que falta ativar.
+- **Pré-visualização (sem Supabase):** a ligação só abre no mesmo browser.
+- Corrigido de caminho: as folhas (BottomSheet) passam a renderizar no `body`, porque nas Definições ficavam fora do ecrã.

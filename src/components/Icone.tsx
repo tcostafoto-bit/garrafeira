@@ -2,7 +2,7 @@ type Nome =
   | 'garrafeira' | 'copo' | 'diario' | 'definicoes' | 'mais' | 'pesquisa'
   | 'claude' | 'lapis' | 'codigo' | 'sair' | 'email' | 'nuvem' | 'seta'
   | 'camara' | 'estrela' | 'estrela-cheia' | 'lixo' | 'menos' | 'fechar' | 'voltar'
-  | 'descarregar' | 'carregar' | 'local' | 'ordenar' | 'exemplos' | 'certo' | 'copiar';
+  | 'descarregar' | 'carregar' | 'local' | 'ordenar' | 'exemplos' | 'certo' | 'copiar' | 'partilhar';
 
 const caminhos: Record<Nome, React.ReactNode> = {
   garrafeira: (<><path d="M3 21V9l9-6 9 6v12" /><path d="M7 21v-6h10v6" /><path d="M7 18h10" /></>),
@@ -31,6 +31,7 @@ const caminhos: Record<Nome, React.ReactNode> = {
   ordenar: (<><path d="M7 4v16M3.5 16.5 7 20l3.5-3.5" /><path d="M17 20V4M13.5 7.5 17 4l3.5 3.5" /></>),
   certo: (<><path d="m5 12.5 4.5 4.5L19 7.5" /></>),
   copiar: (<><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></>),
+  partilhar: (<><path d="M12 15V3" /><path d="m8 7 4-4 4 4" /><path d="M7 10H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1" /></>),
   exemplos: (<><path d="M8 3h8M9 3v5l-4 9a2.5 2.5 0 0 0 2.3 3.5h9.4A2.5 2.5 0 0 0 19 17l-4-9V3" /><path d="M7 14h10" /></>),
 };
 

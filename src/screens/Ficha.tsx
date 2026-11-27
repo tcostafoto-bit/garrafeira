@@ -7,6 +7,7 @@ import { AbrirGarrafa, Estrelas } from '../components/AbrirGarrafa';
 import { formatarEuro, formatarMoeda, formatarTemperatura } from '../lib/formatos';
 import { estadoJanela, NOME_JANELA, noPico, textoJanela } from '../lib/janela';
 import { guiaEfetivo } from '../lib/guia';
+import { PartilharFolha } from '../components/PartilharFolha';
 import { TIPOS, type Consumo, type Vinho } from '../types';
 
 const formatarData = (d: string) =>
@@ -16,11 +17,15 @@ const formatarVolume = (ml: number) => (ml >= 1000 ? `${(ml / 1000).toLocaleStri
 
 const DECANTAR = { nao: 'Não precisa', opcional: 'Opcional', sim: 'Sim' } as const;
 
-export function Ficha({ v, foto, consumos, fechar, editar, mudarQuantidade, alternarFavorito, apagar, abrirGarrafa }: {
-  v: Vinho; foto: { url?: string; externa?: boolean }; consumos: Consumo[]; fechar: () => void; editar: () => void;
-  mudarQuantidade: (q: number) => void; alternarFavorito: () => void; apagar: () => Promise<void>;
-  abrirGarrafa: (c: Omit<Consumo, 'id'>) => Promise<void>;
+const nada = () => {};
+
+/** Ficha de um vinho. Com `leitura` (amigos, por ligação) mostra só as características: sem stock, edição, notas nem Diário. */
+export function Ficha({ v, foto, consumos = [], fechar, editar = nada, mudarQuantidade = nada, alternarFavorito = nada, apagar = async () => {}, abrirGarrafa = async () => {}, leitura = false }: {
+  v: Vinho; foto: { url?: string; externa?: boolean }; consumos?: Consumo[]; fechar?: () => void; editar?: () => void;
+  mudarQuantidade?: (q: number) => void; alternarFavorito?: () => void; apagar?: () => Promise<void>;
+  abrirGarrafa?: (c: Omit<Consumo, 'id'>) => Promise<void>; leitura?: boolean;
 }) {
+  const [partilhar, setPartilhar] = useState(false);
   const [confirmar, setConfirmar] = useState(false);
   const [aApagar, setAApagar] = useState(false);
   const [abrir, setAbrir] = useState(false);
@@ -42,14 +47,17 @@ export function Ficha({ v, foto, consumos, fechar, editar, mudarQuantidade, alte
   return (
     <div className="sobreposto ficha" role="dialog" aria-modal="true" aria-label={v.nome}>
       <div className="barra-topo">
-        <button className="botao-icone" onClick={fechar} aria-label="Voltar"><Icone nome="voltar" /></button>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button className={`botao-icone${v.favorito ? ' dourado' : ''}`} onClick={alternarFavorito}
-            aria-label={v.favorito ? 'Tirar dos favoritos' : 'Marcar como favorito'} aria-pressed={v.favorito}>
-            <Icone nome={v.favorito ? 'estrela-cheia' : 'estrela'} />
-          </button>
-          <button className="botao-icone" onClick={editar} aria-label="Editar"><Icone nome="lapis" /></button>
-        </div>
+        {fechar ? <button className="botao-icone" onClick={fechar} aria-label="Voltar"><Icone nome="voltar" /></button> : <span />}
+        {!leitura && (
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="botao-icone" onClick={() => setPartilhar(true)} aria-label="Partilhar"><Icone nome="partilhar" /></button>
+            <button className={`botao-icone${v.favorito ? ' dourado' : ''}`} onClick={alternarFavorito}
+              aria-label={v.favorito ? 'Tirar dos favoritos' : 'Marcar como favorito'} aria-pressed={v.favorito}>
+              <Icone nome={v.favorito ? 'estrela-cheia' : 'estrela'} />
+            </button>
+            <button className="botao-icone" onClick={editar} aria-label="Editar"><Icone nome="lapis" /></button>
+          </div>
+        )}
       </div>
 
       <div className="ficha-heroi" style={{ ['--cor-tipo' as string]: `var(--${v.tipo})` }}>
@@ -64,6 +72,7 @@ export function Ficha({ v, foto, consumos, fechar, editar, mudarQuantidade, alte
           {[v.ano ?? 'NV', tipo, v.regiao].filter(Boolean).join(' · ')}
         </p>
 
+        {!leitura && (<>
         <section className="cartao ficha-stock">
           <div style={{ minWidth: 0 }}>
             <div className="resumo-rotulo" style={{ marginTop: 0 }}>Na garrafeira</div>
@@ -80,6 +89,7 @@ export function Ficha({ v, foto, consumos, fechar, editar, mudarQuantidade, alte
             <Icone nome="copo" tamanho={18} /> Abrir uma garrafa
           </button>
         )}
+        </>)}
 
         {(v.valorEstimado !== undefined || v.valorFontes.length > 0) && (
           <section className="cartao valor">
@@ -198,11 +208,14 @@ export function Ficha({ v, foto, consumos, fechar, editar, mudarQuantidade, alte
           </section>
         )}
 
+        {!leitura && (
         <button className="botao secundario largo perigo" style={{ marginTop: 32 }} onClick={() => setConfirmar(true)}>
           <Icone nome="lixo" tamanho={18} /> Apagar vinho
         </button>
+        )}
       </div>
 
+      {!leitura && (<>
       <AbrirGarrafa v={v} aberta={abrir} fechar={() => setAbrir(false)}
         guardar={async (c) => { await abrirGarrafa(c); setAbrir(false); }} />
 
@@ -216,6 +229,8 @@ export function Ficha({ v, foto, consumos, fechar, editar, mudarQuantidade, alte
         </button>
         <button className="botao secundario largo" style={{ marginTop: 10 }} onClick={() => setConfirmar(false)}>Cancelar</button>
       </BottomSheet>
+        <PartilharFolha aberta={partilhar} fechar={() => setPartilhar(false)} vinho={v} />
+      </>)}
     </div>
   );
 }

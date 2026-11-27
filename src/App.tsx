@@ -13,12 +13,25 @@ import { Formulario, type Sugestoes } from './screens/Formulario';
 import { ImportarClaude } from './screens/ImportarClaude';
 import { AbrirHoje } from './screens/AbrirHoje';
 import { Diario } from './screens/Diario';
+import { Partilhado } from './screens/Partilhado';
+import { tokenDoEndereco } from './lib/partilhas';
 import { criarExemplos } from './lib/exemplos';
 import { caminhoMini } from './lib/vinhos';
 
 type Vista = { tipo: 'lista' } | { tipo: 'ficha'; id: string } | { tipo: 'form'; id?: string; voltarFicha?: boolean } | { tipo: 'claude'; id?: undefined };
 
+/** Ligação de partilha (#/v/…): página só de leitura, sem entrar. Qualquer outro endereço abre a garrafeira normal. */
 export default function App() {
+  const [token, setToken] = useState(tokenDoEndereco);
+  useEffect(() => {
+    const f = () => setToken(tokenDoEndereco());
+    window.addEventListener('hashchange', f);
+    return () => window.removeEventListener('hashchange', f);
+  }, []);
+  return token ? <Partilhado token={token} /> : <Painel />;
+}
+
+function Painel() {
   const sessao = useSessao();
   const dentro = sessao.estado === 'dentro' || sessao.estado === 'sem-config';
   const inv = useVinhos(dentro);
