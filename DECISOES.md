@@ -116,3 +116,7 @@ Só parar para gastar dinheiro, apagar dados ou publicar algo irreversível.
 
 ## SQL corrido no Supabase (2026-11-27)
 - A pedido do Tiago, corri eu as migrações 002 (partilhas) e 003 (bebidas) no SQL Editor, no Chrome (Browser 2, o mais recente, já com sessão). Confirmado: tabela partilhas e função ver_partilha existem, restrição do tipo aceita whisky, 47 vinhos intactos. O aviso de "operações destrutivas" do Supabase era só dos drop policy/constraint idempotentes.
+
+## v0.14 — Filtros na página partilhada (2026-11-27)
+- Os amigos podem filtrar por tipo de bebida (chips), país, região (depende do país), década do ano e casta (folha "Filtros"), pesquisar por nome/produtor/região/país/casta e ordenar por nome, ano ou valor (valor só se o preço estiver visível). Contagem de resultados e "Limpar".
+- Tudo no cliente com os campos que a função ver_partilha já devolve; nada de privado exposto. "Localização" = país/região do vinho, não onde está guardado. Sem SQL novo.
